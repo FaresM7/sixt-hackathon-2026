@@ -51,6 +51,11 @@ not the list.
 - **Agreement** with the labels (Cohen's kappa), per edit type and language.
 - **Reusability:** is your recipe clear enough that someone else could follow it?
 
+## Model (required): `claude-haiku-4.5`
+Every team uses the same model, so results show the quality of your recipe, not the size of your model. Your final
+judge must run on `claude-haiku-4.5`, and your submitted results must be produced with it. We check this by rerunning
+a sample of your results ourselves.
+
 ## Rules
 - Your judge sees **one reply at a time**, never the pair, the edit type or the label, and must not keep state between calls.
 - Nothing criterion-specific may be hard-coded: everything must come from the criterion text, the policy and the examples.
@@ -68,7 +73,7 @@ Do this **before the hackathon day**.
 - Your own LLM coding agent, so you can work with the tool you are most comfortable with.
 - **LLM API access** for the judge: SIXT provides LLM API keys for this task. The judge talks to any
   OpenAI-compatible endpoint, configured with three environment variables: `JUDGE_LLM_BASE_URL`, `JUDGE_LLM_API_KEY`,
-  `JUDGE_LLM_MODEL`. Keep keys in `.env` (git-ignored), never in code.
+  and `JUDGE_LLM_MODEL=claude-haiku-4.5` (see "Model" above). Keep keys in `.env` (git-ignored), never in code.
 - Check that the kit runs, no LLM needed:
   ```bash
   cd Project_3/starter_pack
