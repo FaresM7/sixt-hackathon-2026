@@ -51,6 +51,11 @@ not the list.
 - **Agreement** with the labels (Cohen's kappa), per edit type and language.
 - **Reusability:** is your recipe clear enough that someone else could follow it?
 
+## Model (required): `claude-haiku-4.5`
+Every team uses the same model, so results show the quality of your recipe, not the size of your model. Your final
+judge must run on `claude-haiku-4.5`, and your submitted results must be produced with it. We check this by rerunning
+a sample of your results ourselves.
+
 ## Rules
 - Your judge sees **one reply at a time**, never the pair, the edit type or the label, and must not keep state between calls.
 - Nothing criterion-specific may be hard-coded: everything must come from the criterion text, the policy and the examples.
@@ -68,7 +73,7 @@ Do this **before the hackathon day**.
 - Your own LLM coding agent, so you can work with the tool you are most comfortable with.
 - **LLM API access** for the judge: SIXT provides LLM API keys for this task. The judge talks to any
   OpenAI-compatible endpoint, configured with three environment variables: `JUDGE_LLM_BASE_URL`, `JUDGE_LLM_API_KEY`,
-  `JUDGE_LLM_MODEL`. Keep keys in `.env` (git-ignored), never in code.
+  and `JUDGE_LLM_MODEL=claude-haiku-4.5` (see "Model" above). Keep keys in `.env` (git-ignored), never in code.
 - Check that the kit runs, no LLM needed:
   ```bash
   cd Project_3/starter_pack
@@ -78,12 +83,29 @@ Do this **before the hackathon day**.
 - Skim the background reading below.
 
 ## Submission
-In this folder, by the deadline:
-- **Your judge:** `starter_pack/final_judge.py` (start from a copy of `my_judge.py`). It must run with
-  `python3 run_judge.py --judge final_judge.py ...` from `starter_pack/`, take the criterion as input, and need nothing
-  outside `starter_pack/` except the packages in your `requirements.txt`.
-- **`SUBMISSION.md`** (see the root `SUBMISSION_TEMPLATE.md`), including your filled-in recipe from `RECIPE.md` and
-  your before-and-after numbers on both judges.
+**Timeline on the day**
+- **About 14:30, surprise task:** you get a new criterion (`CRITERION.md`) and a few labelled examples
+  (`dev_pairs.jsonl`). Run your judge on them unchanged: only `--criterion` and `--dev` change.
+- **16:00, code freeze:** commit and push your final judge as `starter_pack/final_judge.py`. This commit is your judge;
+  later changes to it don't count.
+- **16:00, test cases released:** you get `hidden_cases.zip`, the unseen test cases for both criteria, **without labels**.
+- **16:00-16:45:** run your frozen judge on both test sets **twice** (for consistency) with `claude-haiku-4.5`, then
+  push the result files:
+
+  | File | Run |
+  |---|---|
+  | `submission/criterion1_run1.csv`, `submission/criterion1_run2.csv` | original criterion |
+  | `submission/criterion2_run1.csv`, `submission/criterion2_run2.csv` | surprise criterion |
+
+**We check:** we rerun a random sample of your test cases with your 16:00 code on `claude-haiku-4.5`. Results that don't
+match your code are disqualified, so changing the judge after 16:00, using another model or editing results by hand
+all show up.
+
+**Budget:** at most **3 LLM calls per reply**.
+
+**By 16:45, also push:**
+- `SUBMISSION.md` (see the root `SUBMISSION_TEMPLATE.md`), including your filled-in recipe from `RECIPE.md` and your
+  before-and-after numbers on both criteria.
 - **Either** a 1-minute demo video (`submission/demo.mp4`, under 50 MB) **or** up to 5 slides (`submission/slides.pdf`).
 
 ## Background reading
