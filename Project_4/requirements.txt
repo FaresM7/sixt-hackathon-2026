@@ -1,4 +1,0 @@
-numpy>=1.26
-pandas>=2.2
-pandera>=0.20
-pulp[cbc]>=4.2

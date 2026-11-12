@@ -1,5 +1,0 @@
-category,rank,holding_cost_per_day,addition_cost_per_car,addition_cap,removal_cap
-economy,1,50.0,455.0,33,67
-compact,2,68.0,455.0,31,63
-midsize,3,91.0,455.0,18,37
-premium,4,123.0,455.0,33,66

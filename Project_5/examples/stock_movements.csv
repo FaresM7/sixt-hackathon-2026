@@ -1,6 +1,0 @@
-movement_id,movement_type,units_delta,status,within_stocktake_reference_window
-M1,receipt,20,posted,true
-M2,sale_issue,-35,posted,true
-M3,return_restock,5,posted,true
-M4,adjustment,100,draft,true
-M5,receipt,10,posted,false

@@ -1,5 +1,0 @@
-payment_id,order_id,status
-p1,A,settled
-p2,A,settled
-p3,B,settled
-p4,C,failed
