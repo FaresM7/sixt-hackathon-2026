@@ -1,6 +1,6 @@
 # Submission: Project 2, <The golden butterfly>
 
-> DRAFT (13 Nov, 12:40). Numbers marked TODO are still being produced (HPO, anomaly detection).
+> DRAFT (13 Nov, 14:05). TODO: multi-cutoff robustness, slides.
 
 ## Authors
 **Team name:** <The golden butterfly>
@@ -50,11 +50,11 @@ Hyper-parameter tuning (Optuna TPE, 60 min, 91 trials on a vehicle-disjoint inne
 | Car's own average rate (≈ `starter.py`) | 2,200 | 1,324 | 0.40 | -320 |
 | Segment average rate (best naive) | 1,680 | 1,158 | 0.31 | -547 |
 | LightGBM (ours, default settings) | 1,427 | 951 | 0.26 | -194 |
-| **LightGBM (ours, tuned)** | **1,416** | **939** | - | -196 |
+| **LightGBM (ours, tuned)** | **1,416** | **939** | **0.26** | -196 |
 
--16% MAE vs the best naive baseline, -36% vs the starter-style baseline (tuned model). Per-bucket numbers below are for the default-settings run. Per-vehicle MAE (each car counts once): 1,418.
+-16% MAE vs the best naive baseline, -36% vs the starter-style baseline, -74% vs carry-forward (tuned model, `results/forecast_val_tuned.csv`). Per-vehicle MAE (each car counts once): 1,402 vs 1,793 for the segment baseline.
 
-By days since the last known reading (MAE km, ours vs segment baseline): 1-14 d: 417 vs 442; 15-30 d: 805 vs 880; 31-60 d: 1,185 vs 1,341; 61-90 d: 1,566 vs 1,886; 91-150 d: 1,970 vs 2,357. The gain grows with the horizon. In relative terms (WAPE) the error is ~26% of the distance driven at 61-90 days (test median gap: 67 days), and 54% at 1-14 days, where what the car does *right now* dominates.
+By days since the last known reading (MAE km, tuned model vs segment baseline vs starter-style): 1-14 d: 415 / 442 / 478; 15-30 d: 801 / 880 / 990; 31-60 d: 1,176 / 1,341 / 1,597; 61-90 d: 1,551 / 1,886 / 2,322; 91-150 d: 1,959 / 2,357 / 3,395. The gain grows with the horizon. In relative terms (WAPE) the error is ~26% of the distance driven at 61-90 days (test median gap: 67 days), and 54% at 1-14 days, where what the car does *right now* dominates.
 
 We report WAPE (sum |error| / sum |true km driven since last reading|) instead of MAPE on the odometer: MAPE on the absolute odometer is tiny and flattering, MAPE on the driven distance explodes for parked cars.
 
@@ -62,13 +62,36 @@ Robustness: TODO, mean ± spread over 3 cutoffs (2024-07-01, two 2025 cutoffs). 
 
 **Test predictions**: all 163,047 masked test rows predicted (`results/test_predictions.csv`), median implied usage 79 km/day (IQR 70-87). No ground truth is available to us, so these are unscored.
 
-**Erroneous mileage detection (task B)**: TODO. Status: the two-sided outlier rule is implemented and used for cleaning (flags ~1% of readings). Planned: rules + residual vs the forecast + synthetic error injection for precision/recall.
+### Erroneous mileage detection (task B), `src/anomalies.py`
+No labels exist, so we built label-free detectors and evaluated them by **injecting known errors** into 1% of the clean readings of the 5,526 held-out vehicles (3,050 errors in 354k readings): dropped digit, extra digit, swapped digits, rollback (-1k to -20k km), upward offset (+2k to +20k km), stuck odometer (previous value repeated), miles reported as km.
+
+Detectors (one engine, two modes + rules):
+- **Rules** (physical, "certain"): absurd value, reset to ~0, mileage drop, implied km/day above the p99.9 of real intervals (3,018 km/day). Drop/rate rules only blame the reading that is itself out of line, not the correct one after it.
+- **Two-sided score** (past reports, "likely"): an odometer only goes up, so a reading must lie between the median of its 5 previous and 5 next readings. Score = km outside that range, computed in two passes (suspects from pass 1 are excluded from the reference), and a reading that is consistent with one side is not blamed (protects the correct reading next to a block of bad ones).
+- **Forward score** (real-time mode, new report with nothing after it yet): the **task-A LightGBM forecast** from the history before the report; score = |reported - expected| / typical error at that gap.
+
+Results (alarm budget = share of non-injected readings flagged; precision is a lower bound because flags on real errors count as false):
+
+| Detector | Readings flagged | Recall, all injected | Recall, errors >= 1,000 km | Precision (lower bound) |
+| --- | --- | --- | --- | --- |
+| `starter.py` rules (baseline: drop or > 1,000 km/day) | 2.6% | 0.79 | 0.93 | 0.21 |
+| Our rules only | 0.2% | 0.66 | 0.81 | 0.71 |
+| **Our rules + two-sided score** | **0.5%** | **0.75** | **0.92** | **0.57** |
+| Real-time: forecast-model score (validation window) | 1.0% | 0.58 | 0.75 | 0.35 |
+| Same window: two-sided score | 0.7% | 0.72 | 0.93 | 0.49 |
+
+=> Same recall of large errors as the starter rules with **5x fewer alarms** and ~3x the precision. Recall per type (rules + two-sided): extra digit 100%, offset up 97%, rollback 95%, dropped digit 93%, miles-as-km 82%, swapped digits 33% (most swaps change the value by < 100 km and are harmless), **stuck odometer 0%** (a repeated value is indistinguishable from a parked car without telematics). The real-time forecast score is weaker than the two-sided one (no "after" readings) but still catches 75% of large errors at a 1% alarm rate; it is the mode for checking a report the moment it arrives.
+
+**Typo auto-correction** (flagged injected typos): for a flagged reading we try digit insertions/deletions, adjacent swaps and x1.609, and suggest the candidate inside the expected range closest to the interpolated value. Exact recovery: miles-as-km 98%, swapped digits 97%, extra digit 54% (87% within 100 km), dropped digit 37% (67% within 100 km; the missing digit is often ambiguous).
+
+**On the real data** (all 1.78M daily readings, no injection): 8,642 readings flagged (0.49%): 4,147 certain (rules), 4,495 likely (two-sided); 32% come with a suggested correction. Top 500 with reasons in `results/anomaly_flags_top.csv`, examples plotted in `results/plots/anomaly_examples.png`.
 
 **What did not work / limits (honest):**
 - More features (pool/region/fleet recent rates, shrunk car rate, on-rent shares) gave no gain at 3 cutoffs.
 - Ensembles and denser training cutoffs: within noise.
 - Remaining bias -194 km: partly expected (L1 predicts the median of a right-skewed rate), partly the target-count effect.
-- Cold-start model not validated; test predictions unscored; no anomaly labels exist, so detection can only be evaluated with injected errors and plausibility review.
+- Cold-start model not validated; test predictions unscored; no anomaly labels exist, so detection can only be evaluated with injected errors and plausibility review. Injected errors are an optimistic proxy for real ones.
+- Stuck odometers are not detectable from mileage reports alone; long blocks of wrong readings (6+ in a row) can still confuse the two-sided score (rare, visible in the examples).
 
 ## How to run
 Python 3.11+. From a fresh clone:
@@ -77,10 +100,11 @@ cd Project_2
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 # put data_30_percent_sample.parquet and test_data.parquet into Project_2/data/ (git-ignored)
-python -m src.run_forecast --frac 1.0 --tag _fix1     # headline validation table -> results/forecast_val_fix1.csv (~15 min)
+python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --tag _tuned   # headline table -> results/forecast_val_tuned.csv (~10 min)
 python -m src.compare_models --frac 0.5              # model comparison -> results/model_comparison.csv (~5 min)
 python -m src.hpo --minutes 60 --tag hpo             # optional, hyper-parameter search -> results/hpo/
 python -m src.train_final --params results/hpo/hpo_best.json   # final tuned model + test predictions -> results/test_predictions.csv (~12 min)
+python -m src.anomalies                              # task B: injection evaluation, real flags, plots (~2 min)
 ```
 Seeds are fixed (seed 0, same vehicle split in every script). No environment variables or secrets needed. `results/README.md` lists every result file.
 
@@ -88,9 +112,8 @@ Seeds are fixed (seed 0, same vehicle split in every script). No environment var
 TODO: `submission/slides.pdf` (max 5 slides).
 
 ## Next steps
-1. **Anomaly detection on top of the same model**: flag a report when it is far outside the predicted band (using readings before *and* after it), plus physical rules (decrease, impossible km/day, above max mileage). Evaluate with injected errors (dropped digit, rollback, miles/km mix-up).
-2. **Typo auto-correction**: for a flagged report, test whether a dropped/swapped digit or a miles/km mix-up explains it and suggest the corrected value.
-3. **Uncertainty bands** (quantile models + conformal calibration) per car and date.
-4. **Max-mileage crossing date**: predict when each car hits `vhcl_max_mileage`, for defleet planning.
-5. **Ask for readings where it matters**: request an odometer reading only from the long-term customers whose cars are most uncertain.
-6. **Use SIXT's booking calendar** (future rentals, planned return dates): our analysis shows future rental activity is the missing information, and SIXT already has it.
+1. **Review queue with feedback**: flags + reason + suggested fix go to a human; their decisions become labels to train a supervised detector and tune thresholds.
+2. **Uncertainty bands** (quantile models + conformal calibration) per car and date.
+3. **Max-mileage crossing date**: predict when each car hits `vhcl_max_mileage`, for defleet planning.
+4. **Ask for readings where it matters**: request an odometer reading only from the long-term customers whose cars are most uncertain.
+5. **Use SIXT's booking calendar** (future rentals, planned return dates): our analysis shows future rental activity is the missing information, and SIXT already has it.

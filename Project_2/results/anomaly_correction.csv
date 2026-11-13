@@ -1,0 +1,5 @@
+itype,suggested,exact,within_100km,n
+drop_digit,0.985,0.37,0.672,408
+extra_digit,1.0,0.54,0.87,439
+miles_as_km,0.987,0.982,0.982,381
+swap_digits,1.0,0.968,0.981,158

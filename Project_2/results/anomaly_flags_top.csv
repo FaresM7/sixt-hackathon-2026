@@ -1,0 +1,501 @@
+vhcl_anon_id,day,km,km_p,km_n,lo,hi,two_sided,tier,reason,suggested_km
+23059,8530,982444,176.0,1336.0,90.5,2164.0,980280.0,certain,absurd value (>=900k or >3x max mileage),
+26061,9241,999999,35417.0,35417.0,29234.0,36828.0,963171.0,certain,absurd value (>=900k or >3x max mileage),
+12430,8485,909390,8616.0,909390.0,6993.0,13537.0,895853.0,certain,absurd value (>=900k or >3x max mileage),9390.0
+12430,8513,909390,909390.0,11883.0,7231.0,13537.0,895853.0,certain,absurd value (>=900k or >3x max mileage),9390.0
+20202,8692,902402,6300.0,6357.0,6160.0,6620.0,895782.0,certain,absurd value (>=900k or >3x max mileage),
+23374,8934,877793,8573.0,8794.0,8007.0,10466.0,867327.0,certain,absurd value (>=900k or >3x max mileage),
+15459,8564,660712,6495.0,7777.0,6356.0,8288.0,652424.0,certain,absurd value (>=900k or >3x max mileage),
+14489,9323,691450,42089.0,4209.0,41458.0,43881.0,647569.0,certain,absurd value (>=900k or >3x max mileage),
+10282,8452,424877,24330.0,424877.0,23692.0,25220.0,399657.0,certain,absurd value (>=900k or >3x max mileage),24877.0
+10282,8459,424877,424877.0,424877.0,24330.0,25682.0,399195.0,certain,absurd value (>=900k or >3x max mileage),24877.0
+10282,8461,424877,424877.0,24893.0,24330.0,26144.0,398733.0,certain,absurd value (>=900k or >3x max mileage),24877.0
+10282,8460,424877,424877.0,424877.0,24330.0,26144.0,398733.0,certain,absurd value (>=900k or >3x max mileage),24877.0
+19427,9321,437630,43679.0,44076.0,41928.0,44281.0,393349.0,certain,absurd value (>=900k or >3x max mileage),43763.0
+13294,8907,395525,3725.0,3956.0,3595.0,4978.0,390547.0,certain,absurd value (>=900k or >3x max mileage),
+5394,9447,426626,44942.0,44952.0,43719.0,44952.0,381674.0,certain,absurd value (>=900k or >3x max mileage),
+4078,9308,410510,40589.0,42951.0,39046.0,43948.0,366562.0,certain,absurd value (>=900k or >3x max mileage),41010.0
+4764,8909,364096,6159.0,6409.0,5313.0,7468.0,356628.0,certain,absurd value (>=900k or >3x max mileage),
+12535,9487,390730,38795.0,39087.0,38457.0,41608.0,349122.0,certain,absurd value (>=900k or >3x max mileage),39030.0
+5617,8748,382399,36483.0,38449.0,33779.0,38811.0,343588.0,certain,absurd value (>=900k or >3x max mileage),38299.0
+14945,9637,371333,36942.0,37187.0,36602.0,37259.0,334074.0,certain,absurd value (>=900k or >3x max mileage),37133.0
+18409,8672,367891,35937.0,36792.0,35307.0,36792.0,331099.0,certain,absurd value (>=900k or >3x max mileage),36781.0
+23136,8773,368401,36832.0,36914.0,35641.0,37706.0,330695.0,certain,absurd value (>=900k or >3x max mileage),36841.0
+20185,9355,364791,36472.0,37254.0,35506.0,37413.0,327378.0,certain,absurd value (>=900k or >3x max mileage),36791.0
+22042,9389,352410,34687.0,35323.0,33943.0,35447.0,316963.0,certain,absurd value (>=900k or >3x max mileage),35241.0
+25686,8578,316217,3016.0,5323.0,800.0,5776.0,310441.0,certain,absurd value (>=900k or >3x max mileage),
+20429,9243,341219,33676.0,34202.0,33170.0,36029.0,305190.0,certain,absurd value (>=900k or >3x max mileage),34119.0
+25494,8884,338404,38324.0,38324.0,38172.0,38324.0,300080.0,certain,absurd value (>=900k or >3x max mileage),
+10179,9429,334384,34196.0,34452.0,34131.0,34474.0,299910.0,certain,absurd value (>=900k or >3x max mileage),34384.0
+4707,9166,329329,32621.0,33090.0,32505.0,33657.0,295672.0,certain,absurd value (>=900k or >3x max mileage),32929.0
+13464,9314,330369,32960.0,33352.0,32450.0,34878.0,295491.0,certain,absurd value (>=900k or >3x max mileage),33036.0
+843,9281,323907,32222.0,323907.0,31845.0,32907.0,291000.0,certain,absurd value (>=900k or >3x max mileage),32907.0
+843,9282,323907,323907.0,32907.0,32033.5,32907.0,291000.0,certain,absurd value (>=900k or >3x max mileage),32907.0
+4515,9305,314091,31156.0,314091.0,30377.0,32075.0,282016.0,certain,absurd value (>=900k or >3x max mileage),31491.0
+4515,9306,314091,314091.0,31414.0,30671.0,32207.0,281884.0,certain,absurd value (>=900k or >3x max mileage),31491.0
+12424,9291,308659,30833.0,30997.0,29501.0,31489.0,277170.0,certain,absurd value (>=900k or >3x max mileage),30869.0
+1457,9087,308899,30196.0,31005.0,29061.0,32570.0,276329.0,certain,absurd value (>=900k or >3x max mileage),30889.0
+19726,8861,305514,30514.0,30793.0,30112.0,31049.0,274465.0,certain,absurd value (>=900k or >3x max mileage),30554.0
+19792,8948,302425,29259.0,30497.0,28810.0,30817.0,271608.0,certain,absurd value (>=900k or >3x max mileage),30225.0
+25359,8457,296668,29243.0,29668.0,28531.0,29816.0,266852.0,certain,absurd value (>=900k or >3x max mileage),29666.0
+26752,8915,278275,13783.0,14000.0,13605.0,16291.0,261984.0,certain,absurd value (>=900k or >3x max mileage),
+2322,8646,291381,27808.0,29845.0,27261.0,29845.0,261536.0,certain,absurd value (>=900k or >3x max mileage),29131.0
+16249,8642,290989,28121.0,29718.0,26683.0,29976.0,261013.0,certain,absurd value (>=900k or >3x max mileage),29099.0
+21208,8974,288734,27810.0,28825.0,25367.0,29106.0,259628.0,certain,absurd value (>=900k or >3x max mileage),28734.0
+20925,8577,288825,28085.0,288825.0,27565.0,30226.5,258598.5,certain,absurd value (>=900k or >3x max mileage),28885.0
+20925,8594,288825,288825.0,29253.0,27676.5,30244.0,258581.0,certain,absurd value (>=900k or >3x max mileage),28885.0
+24014,9061,282523,282523.0,28255.0,27483.0,28254.0,254269.0,certain,absurd value (>=900k or >3x max mileage),28253.0
+24014,9059,282523,28070.0,282523.0,27190.0,28254.0,254269.0,certain,absurd value (>=900k or >3x max mileage),28253.0
+321,8641,277833,27662.0,27910.0,26832.0,27992.0,249841.0,certain,absurd value (>=900k or >3x max mileage),27783.0
+2010,9008,277336,27529.0,27736.0,26975.0,27736.0,249600.0,certain,absurd value (>=900k or >3x max mileage),27733.0
+1233,9261,250585,2200.0,3528.0,153.0,4033.0,246552.0,certain,absurd value (>=900k or >3x max mileage),
+20298,9272,265389,26003.0,26541.0,25390.0,26543.0,238846.0,certain,absurd value (>=900k or >3x max mileage),26389.0
+17026,9245,260138,25047.0,26038.0,23884.0,26314.0,233824.0,certain,absurd value (>=900k or >3x max mileage),26013.0
+20427,8716,256689,25309.0,26023.0,24917.0,26023.0,230666.0,certain,absurd value (>=900k or >3x max mileage),25668.0
+12498,8684,251799,24765.0,25179.0,22640.0,26122.0,225677.0,certain,absurd value (>=900k or >3x max mileage),25179.0
+9778,8374,246584,23049.0,23109.0,23049.0,25416.0,221168.0,certain,absurd value (>=900k or >3x max mileage),24584.0
+21179,8750,245519,24118.0,245519.0,22980.0,25233.5,220285.5,certain,absurd value (>=900k or >3x max mileage),24559.0
+21454,9662,245439,23725.0,24636.0,23007.0,25240.0,220199.0,certain,absurd value (>=900k or >3x max mileage),24439.0
+21179,8755,245519,245519.0,24955.0,22990.0,25512.0,220007.0,certain,absurd value (>=900k or >3x max mileage),24559.0
+6010,8543,243206,24034.0,24716.0,23395.0,25065.0,218141.0,certain,absurd value (>=900k or >3x max mileage),24326.0
+7349,8998,236770,22001.0,22001.0,18522.0,24509.0,212261.0,certain,absurd value (>=900k or >3x max mileage),23670.0
+23059,8833,235056,23351.0,23505.0,23351.0,23505.0,211551.0,certain,absurd value (>=900k or >3x max mileage),23505.0
+24398,8348,227359,22627.0,27329.0,21665.0,24856.5,202502.5,certain,absurd value (>=900k or >3x max mileage),22759.0
+13962,8870,218921,21634.0,21892.0,20755.0,22409.0,196512.0,certain,absurd value (>=900k or >3x max mileage),21821.0
+8165,9191,195623,427.0,1959.0,161.0,2201.0,193422.0,certain,absurd value (>=900k or >3x max mileage),
+12804,8384,214894,18750.0,214894.0,16036.0,21661.0,193233.0,certain,absurd value (>=900k or >3x max mileage),21494.0
+1707,9218,216034,21078.0,216034.0,20144.0,22882.5,193151.5,certain,absurd value (>=900k or >3x max mileage),21634.0
+1707,9219,216034,216034.0,22362.0,20611.0,23403.0,192631.0,certain,absurd value (>=900k or >3x max mileage),21634.0
+12804,8385,214894,214894.0,21524.0,17393.0,22321.0,192573.0,certain,absurd value (>=900k or >3x max mileage),21894.0
+9084,9582,217041,27016.0,27144.0,25151.0,27719.0,189322.0,certain,absurd value (>=900k or >3x max mileage),27041.0
+2599,9627,204225,20238.0,20489.0,19930.0,20676.0,183549.0,certain,absurd value (>=900k or >3x max mileage),20225.0
+9324,8761,203683,19842.0,20683.0,19453.0,20683.0,183000.0,certain,absurd value (>=900k or >3x max mileage),20383.0
+2812,8557,202753,19902.0,20275.0,19386.0,20900.0,181853.0,certain,absurd value (>=900k or >3x max mileage),20253.0
+21087,8758,202102,20099.0,20210.0,18966.0,20802.0,181300.0,certain,absurd value (>=900k or >3x max mileage),20202.0
+13570,9002,193394,18703.0,19396.0,17558.0,19556.0,173838.0,certain,absurd value (>=900k or >3x max mileage),19334.0
+14944,8416,194083,19309.0,19408.0,18961.0,20810.0,173273.0,certain,absurd value (>=900k or >3x max mileage),19403.0
+15175,8421,193345,18912.0,20403.0,18912.0,21041.0,172304.0,certain,absurd value (>=900k or >3x max mileage),19345.0
+5421,9083,191131,18145.0,19131.0,17420.0,19565.0,171566.0,certain,absurd value (>=900k or >3x max mileage),19111.0
+5691,9121,192041,19204.0,19958.0,18759.0,20672.0,171369.0,certain,absurd value (>=900k or >3x max mileage),19241.0
+7535,8407,186643,18472.0,18645.0,17419.0,19145.0,167498.0,certain,absurd value (>=900k or >3x max mileage),18643.0
+8087,8353,186000,17392.0,18605.0,17087.0,18906.0,167094.0,certain,absurd value (>=900k or >3x max mileage),18600.0
+20919,8716,186481,17979.0,18648.0,17560.0,19440.0,167041.0,certain,absurd value (>=900k or >3x max mileage),18481.0
+11517,8784,176907,17276.0,17757.0,17276.0,18289.0,158618.0,certain,absurd value (>=900k or >3x max mileage),17607.0
+10230,8762,173611,16646.0,17265.0,16506.0,18490.0,155121.0,certain,absurd value (>=900k or >3x max mileage),17311.0
+14936,8425,172979,17110.0,18092.0,16772.0,18682.0,154297.0,certain,absurd value (>=900k or >3x max mileage),17279.0
+15325,8877,170365,16509.0,17038.0,16130.0,18243.0,152122.0,certain,absurd value (>=900k or >3x max mileage),17035.0
+10111,8403,167755,15834.0,16755.0,15029.0,17440.0,150315.0,certain,absurd value (>=900k or >3x max mileage),16755.0
+21657,8447,163795,16098.0,16374.0,15061.0,17415.0,146380.0,certain,absurd value (>=900k or >3x max mileage),16375.0
+7934,8696,151401,14422.0,15140.0,13468.0,15140.0,136261.0,certain,absurd value (>=900k or >3x max mileage),15101.0
+7514,9484,150828,14404.0,15485.0,14172.0,16001.0,134827.0,certain,absurd value (>=900k or >3x max mileage),15028.0
+20250,8336,149993,14646.0,14993.0,14283.0,15270.0,134723.0,certain,absurd value (>=900k or >3x max mileage),14993.0
+17685,9392,146564,2169.0,14655.0,13802.0,14655.0,131909.0,certain,absurd value (>=900k or >3x max mileage),14564.0
+3508,9175,144631,14342.0,14700.0,14209.0,14971.0,129660.0,certain,absurd value (>=900k or >3x max mileage),14463.0
+15494,8970,141184,13973.0,14184.0,13699.0,14459.0,126725.0,likely,outside the range of the readings before/after by 126725 km,14184.0
+3914,8382,141169,14129.0,14348.0,12955.0,14558.0,126611.0,certain,absurd value (>=900k or >3x max mileage),14169.0
+4784,8278,140004,12675.0,140004.0,12490.0,14017.0,125987.0,certain,absurd value (>=900k or >3x max mileage),14004.0
+4784,8280,140004,140004.0,140004.0,12582.5,14017.0,125987.0,certain,absurd value (>=900k or >3x max mileage),14004.0
+4784,8284,140004,140004.0,14017.0,12675.0,14261.5,125742.5,certain,absurd value (>=900k or >3x max mileage),14004.0
+20580,8973,141217,14121.0,14217.0,12031.0,16027.0,125190.0,certain,absurd value (>=900k or >3x max mileage),14127.0
+22086,9040,139999,13285.0,13999.0,13104.0,15319.0,124680.0,certain,implied usage > 3018 km/day since previous reading,13999.0
+15491,9469,138507,13849.0,13851.0,13289.0,14135.0,124372.0,certain,absurd value (>=900k or >3x max mileage),13850.0
+16952,9051,136643,13342.0,13697.0,12387.0,14483.0,122160.0,certain,absurd value (>=900k or >3x max mileage),13643.0
+24609,8632,133303,12830.0,13491.0,12739.0,13774.0,119529.0,certain,implied usage > 3018 km/day since previous reading,13303.0
+21465,8451,129313,12371.0,13038.0,12014.0,13440.0,115873.0,certain,implied usage > 3018 km/day since previous reading,12913.0
+7482,8783,128333,10794.0,12833.0,10794.0,12833.0,115500.0,certain,absurd value (>=900k or >3x max mileage),12333.0
+17133,9160,126541,12232.0,12654.0,11848.0,13259.0,113282.0,certain,absurd value (>=900k or >3x max mileage),12541.0
+15166,9006,125499,12392.0,12931.0,11558.0,13097.0,112402.0,certain,implied usage > 3018 km/day since previous reading,12599.0
+24364,8957,124606,16555.0,12406.0,16554.0,12664.0,111942.0,certain,implied usage > 3018 km/day since previous reading,
+11685,8550,126756,14437.0,14809.0,14376.0,14818.0,111938.0,certain,implied usage > 3018 km/day since previous reading,
+15279,8304,126971,12697.0,13137.0,11471.0,15176.0,111795.0,certain,implied usage > 3018 km/day since previous reading,12697.0
+2564,8272,123655,12230.0,12477.0,11502.0,12856.0,110799.0,certain,implied usage > 3018 km/day since previous reading,12365.0
+20893,8928,123143,11541.0,12317.0,10971.0,12493.0,110650.0,certain,implied usage > 3018 km/day since previous reading,12143.0
+3454,8812,123330,10911.0,12590.0,9970.0,12939.0,110391.0,certain,implied usage > 3018 km/day since previous reading,12330.0
+17229,9386,122771,12730.0,12277.0,11098.0,13072.0,109699.0,certain,implied usage > 3018 km/day since previous reading,12771.0
+10445,9357,117352,11358.0,11921.0,11149.0,12279.0,105073.0,certain,implied usage > 3018 km/day since previous reading,11732.0
+3789,8336,114539,10958.0,114539.0,9212.0,12227.0,102312.0,certain,absurd value (>=900k or >3x max mileage),11539.0
+3789,8338,114539,114539.0,12072.0,10085.0,12382.0,102157.0,certain,absurd value (>=900k or >3x max mileage),11539.0
+10294,8876,114000,10567.0,11760.0,10268.0,12079.0,101921.0,certain,implied usage > 3018 km/day since previous reading,11400.0
+3209,9175,115431,11012.0,11543.0,10704.0,13661.0,101770.0,certain,absurd value (>=900k or >3x max mileage),11431.0
+758,9646,110995,10939.0,11099.0,9317.0,11315.0,99680.0,certain,absurd value (>=900k or >3x max mileage),11095.0
+24292,9214,110963,10462.0,11426.0,9780.0,11587.0,99376.0,certain,implied usage > 3018 km/day since previous reading,10963.0
+22081,9019,123813,23549.0,24025.0,23263.0,24444.0,99369.0,certain,implied usage > 3018 km/day since previous reading,23813.0
+23506,9083,112115,11987.0,12602.0,11698.0,14074.0,98041.0,certain,absurd value (>=900k or >3x max mileage),12115.0
+9823,8846,109426,10540.0,10942.0,10218.0,13924.0,95502.0,certain,implied usage > 3018 km/day since previous reading,10426.0
+17132,8212,106823,10470.0,10683.0,9000.0,11380.5,95442.5,certain,absurd value (>=900k or >3x max mileage),10623.0
+4258,8969,104276,10282.0,10661.0,10044.0,11526.0,92750.0,certain,absurd value (>=900k or >3x max mileage),10276.0
+19975,8850,100445,8690.0,10206.0,8515.0,10206.0,90239.0,certain,implied usage > 3018 km/day since previous reading,10044.0
+5371,9210,99999,10145.0,10358.0,9298.0,11577.0,88422.0,certain,implied usage > 3018 km/day since previous reading,9999.0
+3178,8564,98518,9176.0,9871.0,8183.0,10767.0,87751.0,certain,implied usage > 3018 km/day since previous reading,9518.0
+7808,8837,98103,9092.0,10267.0,8946.0,11005.0,87098.0,certain,implied usage > 3018 km/day since previous reading,9803.0
+16983,8256,98761,9609.0,9876.0,8897.0,11772.0,86989.0,certain,implied usage > 3018 km/day since previous reading,9761.0
+26877,8954,96713,9042.0,96713.0,9042.0,10239.5,86473.5,certain,implied usage > 3018 km/day since previous reading,9713.0
+26877,8955,96713,96713.0,9852.0,9042.0,10330.0,86383.0,likely,outside the range of the readings before/after by 86383 km,9713.0
+1486,8857,93333,8456.0,9365.0,8406.0,10104.0,83229.0,certain,implied usage > 3018 km/day since previous reading,9333.0
+10345,8429,92072,9067.0,92072.0,8254.0,9448.5,82623.5,certain,implied usage > 3018 km/day since previous reading,9272.0
+10345,8430,92072,92072.0,9396.0,8254.0,9501.0,82571.0,likely,outside the range of the readings before/after by 82571 km,9272.0
+14073,9143,95000,10279.0,95000.0,8858.0,12675.0,82325.0,likely,outside the range of the readings before/after by 82325 km,9500.0
+14073,9173,95000,95000.0,95010.0,9231.0,12713.5,82286.5,likely,outside the range of the readings before/after by 82286 km,9500.0
+14073,9203,95010,95000.0,12667.0,9604.0,12752.0,82258.0,likely,outside the range of the readings before/after by 82258 km,
+24570,9210,99999,15915.0,16407.0,14820.0,18600.0,81399.0,certain,implied usage > 3018 km/day since previous reading,
+15855,9179,89849,8823.0,8823.0,8291.0,9296.0,80553.0,certain,implied usage > 3018 km/day since previous reading,8849.0
+15754,8914,86000,7449.0,7462.0,4680.0,7497.0,78503.0,certain,implied usage > 3018 km/day since previous reading,6000.0
+13649,8889,86000,7234.0,7393.0,7067.0,7561.0,78439.0,certain,implied usage > 3018 km/day since previous reading,
+15619,8850,87098,8467.0,8709.0,7479.0,9861.0,77237.0,certain,implied usage > 3018 km/day since previous reading,8708.0
+18455,8811,86100,8549.0,8769.0,8073.0,9162.0,76938.0,certain,implied usage > 3018 km/day since previous reading,8610.0
+21661,8677,85772,8404.0,8591.0,5934.0,8986.0,76786.0,certain,implied usage > 3018 km/day since previous reading,8572.0
+8266,9479,96283,19612.0,19612.0,19280.0,19693.0,76590.0,certain,implied usage > 3018 km/day since previous reading,
+17638,9496,83918,8076.0,8399.0,7209.0,8399.0,75519.0,certain,implied usage > 3018 km/day since previous reading,8318.0
+356,9417,84959,8223.0,8851.0,8215.0,9776.0,75183.0,certain,implied usage > 3018 km/day since previous reading,8499.0
+23918,9010,83661,7284.0,8370.0,6818.0,8710.0,74951.0,certain,implied usage > 3018 km/day since previous reading,8361.0
+20365,8761,82354,8236.0,9463.0,8024.0,9521.0,72833.0,certain,implied usage > 3018 km/day since previous reading,8354.0
+23007,8249,82328,7946.0,8364.0,7331.0,9586.0,72742.0,certain,implied usage > 3018 km/day since previous reading,8328.0
+22063,8944,81519,7462.0,8151.0,7081.0,9225.0,72294.0,certain,absurd value (>=900k or >3x max mileage),8119.0
+4578,8848,77884,7600.0,7784.0,7422.0,7999.0,69885.0,certain,implied usage > 3018 km/day since previous reading,7784.0
+1704,9606,77985,7432.0,8395.0,7212.0,8543.0,69442.0,certain,implied usage > 3018 km/day since previous reading,7985.0
+5794,9358,75033,7381.0,7533.0,4890.0,9312.0,65721.0,certain,absurd value (>=900k or >3x max mileage),7503.0
+8046,9338,99999,32650.0,34312.0,31184.0,34519.0,65480.0,certain,implied usage > 3018 km/day since previous reading,
+19662,8718,97881,13514.0,97881.0,12980.0,34056.5,63824.5,likely,outside the range of the readings before/after by 63824 km,
+19662,8748,97881,97881.0,33918.0,13247.0,34195.0,63686.0,likely,outside the range of the readings before/after by 63686 km,
+5010,8563,73643,5600.0,7369.0,5055.0,9993.0,63650.0,certain,implied usage > 3018 km/day since previous reading,7343.0
+20013,8314,71112,71112.0,7111.0,6770.0,7863.0,63249.0,likely,outside the range of the readings before/after by 63249 km,7112.0
+20013,8313,71112,6897.0,71112.0,6643.0,7863.0,63249.0,certain,implied usage > 3018 km/day since previous reading,7112.0
+25613,9204,78646,78646.0,78646.0,46515.5,15524.0,63122.0,certain,absurd value (>=900k or >3x max mileage),
+25613,9203,78646,78646.0,78646.0,14385.0,15524.0,63122.0,certain,absurd value (>=900k or >3x max mileage),
+21857,8340,70817,6578.0,7095.0,6578.0,8100.0,62717.0,certain,implied usage > 3018 km/day since previous reading,7017.0
+7583,8998,69283,6251.0,6928.0,6106.0,7618.0,61665.0,certain,implied usage > 3018 km/day since previous reading,6923.0
+12291,9403,99999,38335.0,39214.0,37670.0,39214.0,60785.0,certain,implied usage > 3018 km/day since previous reading,
+25335,8507,68354,6583.0,6835.0,6026.0,7654.0,60700.0,certain,implied usage > 3018 km/day since previous reading,6834.0
+4295,8983,68450,7056.0,7157.0,3043.0,8205.0,60245.0,certain,implied usage > 3018 km/day since previous reading,6850.0
+22832,8289,66501,6201.0,6730.0,5573.0,7143.0,59358.0,certain,implied usage > 3018 km/day since previous reading,6501.0
+26833,9333,66771,5736.0,7506.0,5297.0,7907.0,58864.0,certain,implied usage > 3018 km/day since previous reading,6771.0
+17721,9517,299,59463.0,299.0,58873.0,,58574.0,certain,mileage decreased vs previous reading,
+17721,9520,299,299.0,,58873.0,,58574.0,likely,outside the range of the readings before/after by 58574 km,
+16490,9528,1526,59954.0,64844.0,59860.0,64844.0,58334.0,certain,mileage decreased vs previous reading,61526.0
+17089,8361,67006,6700.0,67006.0,6296.0,8919.0,58087.0,certain,implied usage > 3018 km/day since previous reading,7006.0
+17089,8368,67006,67006.0,8715.0,6340.0,8919.0,58087.0,likely,outside the range of the readings before/after by 58087 km,7006.0
+23641,9568,566,566.0,56410.0,55696.0,56630.0,55130.0,likely,outside the range of the readings before/after by 55130 km,
+23641,9565,566,609.0,566.0,55483.5,56547.0,54917.5,likely,outside the range of the readings before/after by 54918 km,
+23641,9560,580,55696.0,609.0,55271.0,56410.0,54691.0,certain,mileage decreased vs previous reading,
+23641,9564,609,580.0,566.0,55271.0,56478.5,54662.0,likely,outside the range of the readings before/after by 54662 km,
+7581,9079,72453,16922.0,18074.0,15780.0,18389.0,54064.0,certain,implied usage > 3018 km/day since previous reading,
+994,9334,62960,8148.0,8859.0,8148.0,9447.0,53513.0,certain,absurd value (>=900k or >3x max mileage),
+19471,9507,5988,59877.0,59880.0,59388.0,59880.0,53400.0,certain,mileage decreased vs previous reading,59878.0
+6441,8612,59378,5271.0,5932.0,4683.0,6067.0,53311.0,certain,implied usage > 3018 km/day since previous reading,5378.0
+25818,9540,5973,59733.0,59988.0,59188.0,60364.0,53215.0,certain,mileage decreased vs previous reading,59793.0
+21610,9600,99999,49999.0,46916.0,44355.0,46916.0,53083.0,certain,implied usage > 3018 km/day since previous reading,
+1023,9254,74000,19985.0,20637.0,19641.0,21037.0,52963.0,certain,implied usage > 3018 km/day since previous reading,
+20513,9401,58138,4202.0,58138.0,3278.0,5450.5,52687.5,likely,outside the range of the readings before/after by 52688 km,5138.0
+20513,9408,58138,58138.0,5400.0,3740.0,5501.0,52637.0,likely,outside the range of the readings before/after by 52637 km,5138.0
+5370,9600,99999,47032.0,47200.0,45694.0,47416.0,52583.0,certain,implied usage > 3018 km/day since previous reading,
+14221,9352,59411,5663.0,5941.0,5089.0,7662.0,51749.0,certain,implied usage > 3018 km/day since previous reading,5911.0
+5213,9483,5785,57856.0,58868.0,57042.0,59478.0,51257.0,certain,mileage decreased vs previous reading,58785.0
+24471,9577,6173,61737.0,63210.0,57105.0,63210.0,50932.0,certain,mileage decreased vs previous reading,62173.0
+2687,9617,5700,5700.0,57015.0,56586.0,57015.0,50886.0,likely,outside the range of the readings before/after by 50886 km,56700.0
+3172,8398,61383,8577.0,61383.0,8577.0,10579.0,50804.0,certain,implied usage > 3018 km/day since previous reading,
+3172,8399,61383,61383.0,9998.0,8577.0,10796.0,50587.0,likely,outside the range of the readings before/after by 50587 km,
+1707,9560,320,50940.0,51600.0,50830.0,51766.0,50510.0,certain,mileage decreased vs previous reading,
+12877,9345,57415,3443.0,57415.0,2763.0,7002.5,50412.5,likely,outside the range of the readings before/after by 50412 km,5745.0
+2687,9614,5700,57003.0,5700.0,55985.0,57015.0,50285.0,certain,mileage decreased vs previous reading,57003.0
+12877,9350,57415,57415.0,6578.0,2763.0,7427.0,49988.0,likely,outside the range of the readings before/after by 49988 km,7415.0
+12435,9423,4366,55082.0,55969.0,54319.0,57029.0,49953.0,certain,mileage decreased vs previous reading,54366.0
+20013,8460,71112,21675.0,21896.0,21135.0,22004.0,49108.0,certain,implied usage > 3018 km/day since previous reading,
+22289,9562,5,49829.0,51414.0,49022.0,51626.0,49017.0,certain,reset to ~0 after real mileage,
+18216,9652,1142,50134.0,50564.0,50134.0,50919.0,48992.0,certain,mileage decreased vs previous reading,
+24279,9564,9285,58771.0,59545.0,58261.0,59658.0,48976.0,certain,mileage decreased vs previous reading,59285.0
+18045,8942,51009,461.0,1200.0,367.5,2469.0,48540.0,certain,implied usage > 3018 km/day since previous reading,1009.0
+2752,9647,490,48386.0,51352.0,48320.0,51444.0,47830.0,certain,mileage decreased vs previous reading,
+576,8321,53553,5202.0,5355.0,4962.0,5748.0,47805.0,certain,implied usage > 3018 km/day since previous reading,5353.0
+7873,9401,53423,5213.0,5628.0,4967.0,5695.0,47728.0,certain,implied usage > 3018 km/day since previous reading,5423.0
+16935,9513,52524,52524.0,52524.0,50616.0,5116.0,47408.0,likely,outside the range of the readings before/after by 47408 km,
+20392,9610,822,48061.0,49258.0,47944.0,49722.0,47122.0,certain,mileage decreased vs previous reading,
+24570,9043,51703,5006.0,5171.0,4023.0,5680.0,46023.0,certain,implied usage > 3018 km/day since previous reading,5103.0
+7518,9668,377,46694.0,47967.0,46397.0,48325.0,46020.0,certain,mileage decreased vs previous reading,
+23025,8279,51863,4311.0,6291.0,596.0,6291.0,45572.0,certain,implied usage > 3018 km/day since previous reading,5186.0
+4796,9267,482,48209.0,48220.0,45764.0,48220.0,45282.0,certain,mileage decreased vs previous reading,
+24611,8333,50496,50496.0,50496.0,4839.0,5277.0,45219.0,likely,outside the range of the readings before/after by 45219 km,5096.0
+24611,8339,50496,50496.0,5054.0,4963.0,5277.0,45219.0,likely,outside the range of the readings before/after by 45219 km,5096.0
+24611,8331,50496,4963.0,50496.0,4839.0,5277.0,45219.0,certain,implied usage > 3018 km/day since previous reading,5096.0
+24611,8336,50496,50496.0,50496.0,4901.0,5277.0,45219.0,likely,outside the range of the readings before/after by 45219 km,5096.0
+5725,8541,61579,15847.0,16579.0,15652.0,16579.0,45000.0,certain,implied usage > 3018 km/day since previous reading,16579.0
+27008,9410,316,44870.0,334.0,44842.0,46223.0,44526.0,certain,mileage decreased vs previous reading,
+27008,9411,334,316.0,45266.0,44856.0,46223.0,44522.0,likely,outside the range of the readings before/after by 44522 km,
+11401,9003,50251,1966.0,5025.0,4166.0,5781.0,44470.0,certain,implied usage > 3018 km/day since previous reading,5021.0
+6167,9427,57276,57276.0,12958.0,12473.0,12958.0,44318.0,likely,outside the range of the readings before/after by 44318 km,
+6167,9425,57276,12855.0,57276.0,12381.0,12958.0,44318.0,certain,implied usage > 3018 km/day since previous reading,
+10816,9444,4967,49676.0,50394.0,49183.0,50583.0,44216.0,certain,mileage decreased vs previous reading,49967.0
+22450,9556,1649,45970.0,46253.0,45268.0,46845.0,43619.0,certain,mileage decreased vs previous reading,
+19069,8466,4991,49910.0,49931.0,48545.0,49931.0,43554.0,certain,mileage decreased vs previous reading,49917.0
+3507,9371,87,47151.0,48341.0,43515.0,48341.0,43428.0,certain,mileage decreased vs previous reading,
+27008,9387,420,43588.0,43974.0,43497.0,44229.0,43077.0,certain,mileage decreased vs previous reading,
+26688,9564,8387,52228.0,49306.0,51417.5,52885.0,43030.5,certain,mileage decreased vs previous reading,
+17987,9376,47811,47375.0,4781.0,45626.5,4781.0,43030.0,likely,outside the range of the readings before/after by 43030 km,
+9711,9258,48543,4760.0,4859.0,2921.0,5735.0,42808.0,certain,implied usage > 3018 km/day since previous reading,4843.0
+302,8417,59536,16509.0,16811.0,16487.0,16811.0,42725.0,certain,implied usage > 3018 km/day since previous reading,
+19560,9475,2609,45605.0,46607.0,45284.0,46607.0,42675.0,certain,mileage decreased vs previous reading,
+5724,8811,423,43147.0,,42997.0,,42574.0,certain,mileage decreased vs previous reading,
+7845,9465,4700,48068.0,48351.0,47081.0,48987.0,42381.0,certain,mileage decreased vs previous reading,47900.0
+8079,9664,1851,1793.0,2317.0,44077.0,48096.0,42226.0,likely,outside the range of the readings before/after by 42226 km,
+8079,9663,1793,44000.0,1851.0,44000.0,48096.0,42207.0,certain,mileage decreased vs previous reading,
+19889,9285,182,182.0,859.0,42276.0,22040.5,42094.0,likely,outside the range of the readings before/after by 42094 km,
+21583,9618,222,43058.0,43578.0,42272.0,44486.0,42050.0,certain,mileage decreased vs previous reading,
+17987,9377,4781,47811.0,4781.0,46828.0,,42047.0,certain,mileage decreased vs previous reading,
+17987,9378,4781,4781.0,,46828.0,,42047.0,likely,outside the range of the readings before/after by 42047 km,
+8079,9666,2317,1851.0,48096.0,44154.0,48096.0,41837.0,likely,outside the range of the readings before/after by 41837 km,
+257,8746,47743,4537.0,4773.0,4258.0,5977.0,41766.0,certain,implied usage > 3018 km/day since previous reading,4743.0
+2882,9378,1160,43191.0,43969.0,42902.0,45271.0,41742.0,certain,mileage decreased vs previous reading,
+19889,9286,859,182.0,859.0,42276.0,43222.0,41417.0,likely,outside the range of the readings before/after by 41417 km,
+12607,9291,951,43550.0,45072.0,42181.0,45120.0,41230.0,certain,mileage decreased vs previous reading,
+5538,9217,4,41682.0,41747.0,41193.0,41747.0,41189.0,certain,reset to ~0 after real mileage,
+23389,9468,3742,45576.0,46798.0,44876.0,46798.0,41134.0,certain,mileage decreased vs previous reading,
+13550,9348,404,40429.0,43498.0,41201.0,43500.0,40797.0,certain,mileage decreased vs previous reading,
+12201,8688,44689,379.0,2948.0,276.0,4000.0,40689.0,certain,implied usage > 3018 km/day since previous reading,
+23721,9454,966,41780.0,42925.0,41616.0,43657.0,40650.0,certain,mileage decreased vs previous reading,
+5555,9411,303,42238.0,43167.0,40946.0,43396.0,40643.0,certain,mileage decreased vs previous reading,
+1152,9270,969,42045.0,43969.0,41581.0,45300.0,40612.0,certain,mileage decreased vs previous reading,
+18320,9606,518,41584.0,42316.0,41026.0,42402.0,40508.0,certain,mileage decreased vs previous reading,
+23285,8612,4559,45599.0,4559.0,44823.0,,40264.0,certain,mileage decreased vs previous reading,
+23285,8620,4559,4559.0,,44823.0,,40264.0,likely,outside the range of the readings before/after by 40264 km,
+22366,9316,218,40690.0,41674.0,40410.0,41674.0,40192.0,certain,mileage decreased vs previous reading,
+14894,9574,4624,46242.0,46284.0,44637.0,46284.0,40013.0,certain,mileage decreased vs previous reading,46264.0
+8394,9349,49804,49804.0,9804.0,8959.0,9804.0,40000.0,likely,outside the range of the readings before/after by 40000 km,9804.0
+8394,9348,49804,9408.0,49804.0,8510.0,9804.0,40000.0,certain,implied usage > 3018 km/day since previous reading,9804.0
+11845,9620,207,40591.0,41624.0,40195.0,41726.0,39988.0,certain,mileage decreased vs previous reading,
+19855,9422,9894,50154.0,10000.0,49713.0,52334.0,39819.0,certain,mileage decreased vs previous reading,49894.0
+4117,9621,42394,1409.0,2029.0,959.0,2593.0,39801.0,certain,implied usage > 3018 km/day since previous reading,2394.0
+22083,9519,857,40868.0,42615.0,40636.0,42615.0,39779.0,certain,mileage decreased vs previous reading,
+5298,9381,7716,48575.0,49725.0,47456.0,50092.0,39740.0,certain,mileage decreased vs previous reading,47716.0
+19855,9423,10000,9894.0,11000.0,49713.0,52334.0,39713.0,likely,outside the range of the readings before/after by 39713 km,
+5881,9469,1771,4195.0,42247.0,41332.5,42692.0,39561.5,certain,mileage decreased vs previous reading,41771.0
+3789,8895,111,41000.0,15911.0,39622.0,42760.0,39511.0,certain,mileage decreased vs previous reading,
+15237,8380,40298,706.0,706.0,706.0,807.0,39491.0,certain,implied usage > 3018 km/day since previous reading,
+3789,8928,3277,42760.0,43525.0,42760.0,43525.0,39483.0,certain,mileage decreased vs previous reading,43277.0
+7519,8700,47831,7153.0,8409.0,6111.0,8614.0,39217.0,likely,outside the range of the readings before/after by 39217 km,7831.0
+13195,9388,1345,40917.0,42668.0,40547.0,46641.0,39202.0,certain,mileage decreased vs previous reading,41345.0
+19855,9432,11000,11000.0,52334.0,50154.0,52426.0,39154.0,likely,outside the range of the readings before/after by 39154 km,
+21644,9567,783,40260.0,42237.0,39901.0,42237.0,39118.0,certain,mileage decreased vs previous reading,
+3789,8963,4428,44281.0,44911.0,43525.0,45074.0,39097.0,certain,mileage decreased vs previous reading,44728.0
+4260,8875,46361,5252.0,6444.0,3568.0,7278.0,39083.0,certain,implied usage > 3018 km/day since previous reading,6361.0
+19855,9430,11000,10000.0,11000.0,49933.5,52334.0,38933.5,likely,outside the range of the readings before/after by 38934 km,
+11962,9648,5981,44966.0,45539.0,44914.0,46008.0,38933.0,certain,mileage decreased vs previous reading,45981.0
+12166,8782,4339,43392.0,43398.0,43248.0,43398.0,38909.0,certain,mileage decreased vs previous reading,43393.0
+16190,9371,4200,44254.0,44919.0,42992.0,45816.0,38792.0,certain,mileage decreased vs previous reading,45200.0
+22653,9470,1017,40451.0,41204.0,39807.0,42438.0,38790.0,certain,mileage decreased vs previous reading,41017.0
+4903,9610,4031,4031.0,,42801.0,,38770.0,likely,outside the range of the readings before/after by 38770 km,
+4903,9604,4031,4031.0,4031.0,42801.0,,38770.0,likely,outside the range of the readings before/after by 38770 km,
+26979,8311,43167,4183.0,4367.0,4183.0,4541.0,38626.0,likely,outside the range of the readings before/after by 38626 km,4367.0
+26986,8322,43636,3386.0,43636.0,3217.0,5086.0,38550.0,certain,implied usage > 3018 km/day since previous reading,4636.0
+18813,9399,43987,4618.0,5007.0,4357.0,5444.0,38543.0,certain,implied usage > 3018 km/day since previous reading,4987.0
+8547,9228,394,39072.0,40466.0,38786.0,41214.0,38392.0,certain,mileage decreased vs previous reading,
+22483,9300,7073,45320.0,47151.0,45320.0,47258.0,38247.0,certain,mileage decreased vs previous reading,47073.0
+19746,9353,4383,4383.0,4383.0,42623.0,46056.5,38240.0,likely,outside the range of the readings before/after by 38240 km,43083.0
+19746,9356,4383,4383.0,45494.0,42623.0,46409.0,38240.0,likely,outside the range of the readings before/after by 38240 km,43083.0
+19746,9347,4383,43833.0,4383.0,42623.0,45704.0,38240.0,certain,mileage decreased vs previous reading,43833.0
+12625,9331,3800,42024.0,3800.0,42024.0,44589.0,38224.0,certain,mileage decreased vs previous reading,43800.0
+12625,9332,3800,3800.0,3800.0,42024.0,44589.0,38224.0,likely,outside the range of the readings before/after by 38224 km,43800.0
+12625,9360,3800,3800.0,44589.0,42024.0,44589.0,38224.0,likely,outside the range of the readings before/after by 38224 km,43800.0
+228,9363,3093,3093.0,42418.0,41221.5,42504.0,38128.5,likely,outside the range of the readings before/after by 38128 km,
+4901,9352,4233,43342.0,43633.0,42336.0,44215.0,38103.0,certain,mileage decreased vs previous reading,43233.0
+228,9360,3093,41936.0,3093.0,41182.0,42504.0,38089.0,certain,mileage decreased vs previous reading,
+6650,8893,45209,6396.0,6805.0,6099.0,7126.0,38083.0,certain,implied usage > 3018 km/day since previous reading,
+7647,9392,4252,42523.0,42898.0,42320.0,43035.0,38068.0,certain,mileage decreased vs previous reading,42592.0
+21583,9620,5021,43578.0,44486.0,43045.5,44574.0,38024.5,certain,mileage decreased vs previous reading,
+19807,8928,383,38367.0,41211.0,38235.0,43166.0,37852.0,certain,mileage decreased vs previous reading,
+17253,9265,40657,985.0,1884.0,605.0,2805.0,37852.0,certain,implied usage > 3018 km/day since previous reading,657.0
+17625,9305,46620,4136.0,6101.0,4048.0,8812.0,37808.0,certain,implied usage > 3018 km/day since previous reading,4662.0
+26986,8323,43636,43636.0,3643.0,3251.5,5949.0,37687.0,likely,outside the range of the readings before/after by 37687 km,4636.0
+3681,9617,4210,42109.0,,41825.0,,37615.0,certain,mileage decreased vs previous reading,
+22383,9591,360,39135.0,41888.0,37868.0,41888.0,37508.0,certain,mileage decreased vs previous reading,
+3056,9430,400,39060.0,39975.0,37877.0,40307.0,37477.0,certain,mileage decreased vs previous reading,
+21816,9377,8473,46718.0,48655.0,45817.0,49181.0,37344.0,certain,mileage decreased vs previous reading,48473.0
+17470,9337,432,38250.0,38704.0,37763.0,38704.0,37331.0,certain,mileage decreased vs previous reading,
+14489,9326,4209,691450.0,43515.0,41523.5,43881.0,37314.5,certain,mileage decreased vs previous reading,43209.0
+7522,9407,4193,41688.0,4193.0,41486.0,42793.0,37293.0,certain,mileage decreased vs previous reading,41693.0
+7522,9410,4193,4193.0,42172.0,41486.0,43056.0,37293.0,likely,outside the range of the readings before/after by 37293 km,41493.0
+20254,8733,41720,4037.0,4120.0,3835.0,4470.0,37250.0,certain,implied usage > 3018 km/day since previous reading,4120.0
+8303,9428,23,38316.0,39338.0,37261.0,43915.0,37238.0,certain,mileage decreased vs previous reading,
+24253,9031,52755,15038.0,5275.0,14084.0,15551.0,37204.0,certain,implied usage > 3018 km/day since previous reading,
+8897,9327,9299,9299.0,48048.0,46500.5,48991.0,37201.5,likely,outside the range of the readings before/after by 37202 km,
+8897,9321,9299,46548.0,9299.0,46453.0,48950.0,37154.0,certain,mileage decreased vs previous reading,
+5881,9466,4195,41405.0,1771.0,41260.0,42692.0,37065.0,certain,mileage decreased vs previous reading,41395.0
+17531,9251,4195,41947.0,4195.0,41232.0,,37037.0,certain,mileage decreased vs previous reading,
+17531,9252,4195,4195.0,,41232.0,,37037.0,likely,outside the range of the readings before/after by 37037 km,
+21979,9343,2000,39556.0,39730.0,38922.0,39834.0,36922.0,certain,mileage decreased vs previous reading,
+5123,9311,5,36887.0,37292.0,36887.0,38046.0,36882.0,certain,reset to ~0 after real mileage,
+24640,8530,44842,7158.0,7158.0,5349.0,7985.0,36857.0,certain,implied usage > 3018 km/day since previous reading,
+10633,9369,37,37701.0,39303.0,36833.0,39874.0,36796.0,certain,mileage decreased vs previous reading,
+16876,9070,67435,27203.0,28041.0,26228.0,30735.0,36700.0,certain,implied usage > 3018 km/day since previous reading,
+11840,9254,428,428.0,39484.0,36984.0,39619.0,36556.0,likely,outside the range of the readings before/after by 36556 km,
+8607,8714,1,36511.0,37726.0,36511.0,38329.0,36510.0,certain,reset to ~0 after real mileage,
+4034,9269,2208,39293.0,40145.0,38604.0,40833.0,36396.0,certain,mileage decreased vs previous reading,
+22593,8766,354,354.0,36738.0,36608.5,36849.0,36254.5,likely,outside the range of the readings before/after by 36254 km,
+22593,8762,354,36634.0,354.0,36583.0,36849.0,36229.0,certain,mileage decreased vs previous reading,
+12879,9474,4127,4127.0,41608.0,40346.5,41608.0,36219.5,likely,outside the range of the readings before/after by 36220 km,41027.0
+20299,8532,43705,6000.0,7600.0,6000.0,7635.0,36070.0,certain,implied usage > 3018 km/day since previous reading,
+1505,8624,1,36699.0,38536.0,35930.0,38619.5,35929.0,certain,reset to ~0 after real mileage,
+4901,9308,4233,4233.0,41705.0,40143.5,42336.0,35910.5,likely,outside the range of the readings before/after by 35910 km,40233.0
+4901,9300,4233,40520.0,4233.0,40087.0,42336.0,35854.0,certain,mileage decreased vs previous reading,40233.0
+15029,9175,1888,37709.0,1888.0,37709.0,39309.0,35821.0,certain,mileage decreased vs previous reading,
+15029,9197,1888,1888.0,39066.0,37709.0,39309.0,35821.0,likely,outside the range of the readings before/after by 35821 km,
+22504,9221,399,36274.0,37136.0,36212.0,37611.0,35813.0,certain,mileage decreased vs previous reading,
+2867,9365,1508,3500.0,38151.0,37239.0,39239.0,35731.0,certain,mileage decreased vs previous reading,
+17678,9587,9999,46192.0,49001.0,45637.0,49001.0,35638.0,certain,mileage decreased vs previous reading,
+1946,9433,721,36621.0,36861.0,36335.0,37105.0,35614.0,certain,mileage decreased vs previous reading,
+26890,9257,568,568.0,37000.0,36137.0,37831.0,35569.0,likely,outside the range of the readings before/after by 35569 km,
+12879,9472,4127,41045.0,4127.0,39648.0,41608.0,35521.0,certain,mileage decreased vs previous reading,41027.0
+24341,9397,151,35810.0,36365.0,35602.0,36794.0,35451.0,certain,mileage decreased vs previous reading,
+11754,8791,40297,4145.0,4629.0,3000.0,4847.0,35450.0,likely,outside the range of the readings before/after by 35450 km,4297.0
+8271,9519,42423,6093.0,6416.0,6005.0,7000.0,35423.0,certain,implied usage > 3018 km/day since previous reading,
+13805,9335,4051,40500.0,40514.0,39400.0,40922.0,35349.0,certain,mileage decreased vs previous reading,40501.0
+10679,9235,3977,39400.0,39895.0,39276.0,41017.0,35299.0,certain,mileage decreased vs previous reading,39477.0
+13550,9316,3000,40868.0,41973.0,38204.0,41201.0,35204.0,certain,mileage decreased vs previous reading,39000.0
+16919,8651,1,1.0,35939.0,35181.0,36298.0,35180.0,likely,outside the range of the readings before/after by 35180 km,
+16919,8650,1,35671.0,1.0,35181.0,36118.5,35180.0,certain,reset to ~0 after real mileage,
+202,9411,1187,36869.0,36957.0,36361.0,38553.0,35174.0,certain,mileage decreased vs previous reading,
+26890,9252,568,34000.0,568.0,35740.5,37730.5,35172.5,certain,mileage decreased vs previous reading,
+13975,9543,286,36854.0,37345.0,35452.0,37889.0,35166.0,certain,mileage decreased vs previous reading,
+11840,9246,428,38454.0,428.0,35514.0,39619.0,35086.0,certain,mileage decreased vs previous reading,
+10309,9287,710,35934.0,36602.0,35792.0,36903.0,35082.0,certain,mileage decreased vs previous reading,
+2565,8754,1643,1643.0,37880.0,36661.0,38649.0,35018.0,likely,outside the range of the readings before/after by 35018 km,
+20977,9157,2175,2175.0,39532.0,37177.5,40561.0,35002.5,likely,outside the range of the readings before/after by 35002 km,
+15174,9388,3928,39006.0,40568.0,38913.0,41145.0,34985.0,certain,mileage decreased vs previous reading,39628.0
+3636,9603,3997,39723.0,40126.0,38904.0,40742.0,34907.0,certain,mileage decreased vs previous reading,39997.0
+226,8627,4125,4125.0,39839.0,39020.0,39839.0,34895.0,likely,outside the range of the readings before/after by 34895 km,
+20977,9133,2175,37930.0,2175.0,37025.0,40046.5,34850.0,certain,mileage decreased vs previous reading,
+2565,8752,1643,36878.0,1643.0,36444.0,38264.5,34801.0,certain,mileage decreased vs previous reading,
+9761,9259,3863,3863.0,39222.0,38634.0,39290.0,34771.0,likely,outside the range of the readings before/after by 34771 km,38634.0
+9761,9257,3863,38634.0,3863.0,38634.0,39256.0,34771.0,certain,mileage decreased vs previous reading,38634.0
+4542,9418,3882,3882.0,39479.0,38579.0,39757.0,34697.0,likely,outside the range of the readings before/after by 34697 km,38582.0
+226,8626,4125,39276.0,4125.0,38764.0,39839.0,34639.0,certain,mileage decreased vs previous reading,
+15948,9613,352,35088.0,36307.0,34965.0,36642.0,34613.0,certain,mileage decreased vs previous reading,
+4542,9414,3882,38821.0,3882.0,38426.0,39757.0,34544.0,certain,mileage decreased vs previous reading,38821.0
+26391,9616,901,35361.0,35792.0,35361.0,36197.0,34460.0,certain,mileage decreased vs previous reading,
+24321,8803,1,1.0,34881.0,34134.0,35476.0,34133.0,likely,outside the range of the readings before/after by 34133 km,
+20388,9235,3000,3000.0,37852.0,37132.5,40311.0,34132.5,likely,outside the range of the readings before/after by 34132 km,38000.0
+24478,9481,216,34411.0,,34334.0,,34118.0,certain,mileage decreased vs previous reading,
+20388,9228,3000,37177.0,3000.0,37088.0,40023.0,34088.0,certain,mileage decreased vs previous reading,38000.0
+16556,9385,2369,2369.0,,36451.0,,34082.0,likely,outside the range of the readings before/after by 34082 km,
+16556,9383,2369,39368.0,2369.0,36451.0,,34082.0,certain,mileage decreased vs previous reading,
+11109,9164,6003,40528.0,42282.0,40071.0,42616.0,34068.0,certain,mileage decreased vs previous reading,
+19420,8635,1,3522.0,35736.0,34056.0,35736.0,34055.0,certain,reset to ~0 after real mileage,
+19762,8980,1,34558.0,34999.0,33987.0,35499.0,33986.0,certain,reset to ~0 after real mileage,
+24321,8801,1,34283.0,1.0,33985.0,35446.5,33984.0,certain,reset to ~0 after real mileage,
+5608,9337,1583,1583.0,1583.0,35473.0,35964.0,33890.0,likely,outside the range of the readings before/after by 33890 km,
+5608,9335,1583,1583.0,1583.0,35473.0,18773.5,33890.0,likely,outside the range of the readings before/after by 33890 km,
+18285,9314,6832,42063.0,42234.0,40505.0,42588.0,33673.0,certain,mileage decreased vs previous reading,
+967,9430,284,233.0,4540.0,33928.0,34931.0,33644.0,likely,outside the range of the readings before/after by 33644 km,
+2867,9364,3500,3500.0,1508.0,37118.0,39239.0,33618.0,likely,outside the range of the readings before/after by 33618 km,37500.0
+967,9427,233,34063.0,284.0,33746.5,34931.0,33513.5,certain,mileage decreased vs previous reading,
+4849,9419,3759,3759.0,37694.0,37264.0,37750.0,33505.0,likely,outside the range of the readings before/after by 33505 km,37359.0
+4849,9418,3759,37503.0,3759.0,37264.0,37750.0,33505.0,certain,mileage decreased vs previous reading,37509.0
+2566,9361,5000,41029.0,41125.0,38496.0,41983.0,33496.0,certain,mileage decreased vs previous reading,
+2798,8924,5562,5562.0,43309.0,39013.5,47787.0,33451.5,likely,outside the range of the readings before/after by 33452 km,45562.0
+22366,9302,5000,4561.0,40085.0,38394.5,40410.0,33394.5,likely,outside the range of the readings before/after by 33394 km,
+2798,8919,5562,39072.0,5562.0,38955.0,45548.0,33393.0,certain,mileage decreased vs previous reading,
+23440,9388,256,256.0,750.0,33643.0,36608.0,33387.0,likely,outside the range of the readings before/after by 33387 km,
+22405,9271,282,33862.0,1300.0,33665.0,35822.0,33383.0,certain,mileage decreased vs previous reading,
+23440,9387,256,33673.0,256.0,33590.5,35016.0,33334.5,certain,mileage decreased vs previous reading,
+25358,9309,3611,37115.0,37628.0,36931.0,38607.0,33320.0,certain,mileage decreased vs previous reading,37611.0
+17445,9277,10,34669.0,35488.0,33314.0,35612.0,33304.0,certain,mileage decreased vs previous reading,
+22446,9332,100,33680.0,6000.0,33389.0,34730.0,33289.0,certain,mileage decreased vs previous reading,
+22393,9188,845,34130.0,35075.0,34130.0,35261.0,33285.0,certain,mileage decreased vs previous reading,
+22366,9299,4561,39569.0,5000.0,37814.0,40247.5,33253.0,certain,mileage decreased vs previous reading,
+10312,9323,2000,35925.0,38148.0,35191.0,38297.0,33191.0,certain,mileage decreased vs previous reading,
+10577,8614,1,33420.0,34049.0,33187.0,34734.0,33186.0,certain,reset to ~0 after real mileage,
+17264,8830,35066,170.0,765.0,89.0,1899.0,33167.0,certain,implied usage > 3018 km/day since previous reading,
+18523,8805,18767,51927.0,,51927.0,,33160.0,certain,mileage decreased vs previous reading,
+6382,9445,2222,2222.0,36074.0,35363.0,36262.0,33141.0,likely,outside the range of the readings before/after by 33141 km,
+6382,9443,2222,35419.0,2222.0,35363.0,36262.0,33141.0,certain,mileage decreased vs previous reading,
+10470,8900,3,33180.0,33193.0,33101.0,33193.0,33098.0,certain,reset to ~0 after real mileage,
+3218,9337,3737,37378.0,37441.0,36742.0,37441.0,33005.0,certain,mileage decreased vs previous reading,37387.0
+2867,9357,3500,37360.0,3500.0,36444.5,39239.0,32944.5,certain,mileage decreased vs previous reading,37500.0
+15163,8861,5,5.0,34288.0,32939.0,34288.0,32934.0,likely,outside the range of the readings before/after by 32934 km,
+23440,9390,750,256.0,34638.0,33658.0,38200.0,32908.0,likely,outside the range of the readings before/after by 32908 km,
+12306,9333,6279,5942.0,6389.0,39138.0,23564.5,32859.0,likely,outside the range of the readings before/after by 32859 km,
+22360,9600,8620,8620.0,43368.0,41434.0,43368.0,32814.0,likely,outside the range of the readings before/after by 32814 km,
+10240,9622,3702,36497.0,37808.0,36497.0,39004.0,32795.0,certain,mileage decreased vs previous reading,36702.0
+15163,8848,5,33211.0,5.0,32792.0,34288.0,32787.0,certain,reset to ~0 after real mileage,
+12306,9337,6389,6279.0,6389.0,39138.0,40740.0,32749.0,likely,outside the range of the readings before/after by 32749 km,
+15230,9134,2440,35161.0,36084.0,35039.0,39416.0,32599.0,certain,mileage decreased vs previous reading,
+22548,8794,7352,39856.0,33576.0,39855.0,33847.0,32503.0,certain,mileage decreased vs previous reading,
+22360,9599,8620,43231.0,8620.0,41076.0,43368.0,32456.0,certain,mileage decreased vs previous reading,
+1946,9408,1733,34597.0,35727.0,34153.0,36323.0,32420.0,certain,mileage decreased vs previous reading,
+22405,9282,1300,1300.0,35822.0,33665.0,36726.0,32365.0,likely,outside the range of the readings before/after by 32365 km,
+22405,9275,1300,282.0,1300.0,33665.0,36416.5,32365.0,likely,outside the range of the readings before/after by 32365 km,
+9716,9338,2445,34783.0,2445.0,34701.0,35217.0,32256.0,certain,mileage decreased vs previous reading,
+9716,9339,2445,2445.0,35189.0,34701.0,35217.0,32256.0,likely,outside the range of the readings before/after by 32256 km,
+14830,8888,3819,38194.0,38726.0,36040.0,39065.0,32221.0,certain,mileage decreased vs previous reading,38719.0
+1422,8734,1900,34111.0,34207.0,34111.0,36368.0,32211.0,certain,mileage decreased vs previous reading,
+11647,9428,44579,12142.0,12182.0,12044.0,12369.0,32210.0,likely,outside the range of the readings before/after by 32210 km,
+18293,8673,33997,878.0,1006.0,818.0,1802.0,32195.0,certain,implied usage > 3018 km/day since previous reading,
+10963,8454,41927,3622.0,4205.0,3559.0,9778.0,32149.0,certain,implied usage > 3018 km/day since previous reading,4127.0
+22582,9344,87,32530.0,33287.0,32171.0,33287.0,32084.0,certain,mileage decreased vs previous reading,
+20428,8863,32,32397.0,33413.0,32107.0,33413.0,32075.0,certain,mileage decreased vs previous reading,
+5399,9456,3848,38488.0,3848.0,35816.0,,31968.0,certain,mileage decreased vs previous reading,
+5399,9459,3848,3848.0,,35816.0,,31968.0,likely,outside the range of the readings before/after by 31968 km,
+5717,8634,3623,36232.0,36235.0,35549.0,36235.0,31926.0,certain,mileage decreased vs previous reading,36232.0
+7793,9470,5421,37645.0,5421.0,37344.0,38832.0,31923.0,certain,mileage decreased vs previous reading,
+7793,9472,5421,5421.0,38777.0,37344.0,38887.0,31923.0,likely,outside the range of the readings before/after by 31923 km,
+27113,9638,36065,2768.0,4016.0,2582.0,4170.5,31894.5,certain,implied usage > 3018 km/day since previous reading,3065.0
+19070,9596,35854,3500.0,3698.0,2678.0,4018.0,31836.0,certain,implied usage > 3018 km/day since previous reading,3585.0
+11075,9330,87,32878.0,33205.0,31860.0,33951.0,31773.0,certain,mileage decreased vs previous reading,
+4825,9213,554,33042.0,35879.0,32293.0,36040.0,31739.0,certain,mileage decreased vs previous reading,
+10864,9146,21,32288.0,21.0,31758.0,33295.0,31737.0,certain,mileage decreased vs previous reading,
+10864,9147,21,21.0,33103.0,31758.0,33487.0,31737.0,likely,outside the range of the readings before/after by 31737 km,
+7601,8342,3535,35345.0,35801.0,35242.5,36015.0,31707.5,certain,mileage decreased vs previous reading,35535.0
+25613,9200,78646,78646.0,78646.0,14385.0,46997.5,31648.5,certain,absurd value (>=900k or >3x max mileage),
+12416,9535,475,32291.0,32827.0,32068.0,33517.0,31593.0,certain,mileage decreased vs previous reading,
+22175,9301,35129,3210.0,3513.0,2277.0,3581.0,31548.0,likely,outside the range of the readings before/after by 31548 km,3512.0
+118,9426,3637,35312.0,36544.0,35157.0,36836.0,31520.0,certain,mileage decreased vs previous reading,36137.0
+5336,9313,3829,38289.0,38362.0,35318.0,38362.0,31489.0,certain,mileage decreased vs previous reading,38294.0
+22528,8577,1,31567.0,39688.0,31453.0,40909.0,31452.0,certain,reset to ~0 after real mileage,
+3751,9300,4181,4181.0,4487.0,35592.0,36724.0,31411.0,likely,outside the range of the readings before/after by 31411 km,
+18278,9449,3071,3028.0,34761.0,34464.0,34761.0,31393.0,likely,outside the range of the readings before/after by 31393 km,
+24363,9552,5555,36958.0,5914.0,36942.0,38534.0,31387.0,certain,mileage decreased vs previous reading,
+18278,9447,2877,34464.0,3028.0,34216.0,34761.0,31339.0,certain,mileage decreased vs previous reading,
+3751,9296,4181,35666.0,4181.0,35518.0,36724.0,31337.0,certain,mileage decreased vs previous reading,
+23389,9286,331,32222.0,776.0,31666.0,33922.5,31335.0,certain,mileage decreased vs previous reading,
+18278,9448,3028,2877.0,3071.0,34340.0,34761.0,31312.0,likely,outside the range of the readings before/after by 31312 km,
+3580,8751,4377,35953.0,37444.0,35682.0,37499.0,31305.0,certain,mileage decreased vs previous reading,
+10973,8649,1071,1071.0,34518.0,32371.5,34518.0,31300.5,likely,outside the range of the readings before/after by 31300 km,
+11041,9190,3,3.0,,31283.0,,31280.0,likely,outside the range of the readings before/after by 31280 km,
+11041,9188,3,32240.0,3.0,31283.0,,31280.0,certain,reset to ~0 after real mileage,
+11611,8825,3507,8374.0,35742.0,34762.0,35745.0,31255.0,certain,mileage decreased vs previous reading,35007.0
+3751,9301,4487,4181.0,36260.0,35666.0,36724.0,31179.0,likely,outside the range of the readings before/after by 31179 km,
+2984,9403,6101,37283.0,37971.0,37211.0,38323.0,31110.0,certain,mileage decreased vs previous reading,
+24363,9558,5914,5914.0,6273.0,36950.0,38534.0,31036.0,likely,outside the range of the readings before/after by 31036 km,
+24363,9557,5914,5555.0,5914.0,36942.0,38534.0,31028.0,likely,outside the range of the readings before/after by 31028 km,
+23389,9290,776,331.0,33631.0,31791.0,33994.0,31015.0,likely,outside the range of the readings before/after by 31015 km,
+21878,9675,35507,4410.0,4493.0,3178.0,4493.0,31014.0,certain,implied usage > 3018 km/day since previous reading,3557.0
+24336,9256,394,394.0,32394.0,31388.5,33286.0,30994.5,likely,outside the range of the readings before/after by 30994 km,
+3751,9246,1654,1654.0,33523.0,32616.0,34002.0,30962.0,likely,outside the range of the readings before/after by 30962 km,
+23406,9616,3537,35285.0,36002.0,34489.0,36370.0,30952.0,certain,mileage decreased vs previous reading,35737.0
+24336,9248,394,31449.0,394.0,31328.0,33286.0,30934.0,certain,mileage decreased vs previous reading,
+3062,9445,495,31420.0,32206.0,31377.0,32763.0,30882.0,certain,mileage decreased vs previous reading,
+3751,9243,1654,32718.0,1654.0,32514.0,33970.5,30860.0,certain,mileage decreased vs previous reading,
+414,8956,448,31877.0,32857.0,31247.0,32857.0,30799.0,certain,mileage decreased vs previous reading,
+12361,9088,4671,35807.0,5347.0,35371.0,37810.0,30700.0,certain,mileage decreased vs previous reading,
+24363,9579,6273,5914.0,38534.0,36958.0,38534.0,30685.0,likely,outside the range of the readings before/after by 30685 km,
+17381,8623,17,30920.0,34236.0,30637.0,34236.0,30620.0,certain,mileage decreased vs previous reading,
+16199,8788,34095,1930.0,2946.0,1644.0,3527.0,30568.0,likely,outside the range of the readings before/after by 30568 km,3095.0
+119,9464,3433,3433.0,35000.0,33995.0,36298.0,30562.0,likely,outside the range of the readings before/after by 30562 km,34033.0
+19420,8634,3522,3522.0,1.0,34056.0,35736.0,30534.0,likely,outside the range of the readings before/after by 30534 km,34522.0
+19420,8633,3522,35438.0,3522.0,34056.0,35736.0,30534.0,certain,mileage decreased vs previous reading,35422.0
+14252,8903,3408,3408.0,34246.0,33924.5,34576.0,30516.5,likely,outside the range of the readings before/after by 30516 km,34008.0
+13816,9267,34657,2775.0,3500.0,1233.0,4187.0,30470.0,certain,implied usage > 3018 km/day since previous reading,3457.0
+12361,9092,5347,5347.0,37808.0,35807.0,37810.0,30460.0,likely,outside the range of the readings before/after by 30460 km,
+119,9461,3433,34150.0,3433.0,33840.0,35742.0,30407.0,certain,mileage decreased vs previous reading,34133.0
+2629,8680,1,30787.0,31076.0,30400.0,32206.0,30399.0,certain,reset to ~0 after real mileage,
+14252,8902,3408,34080.0,3408.0,33769.0,34411.0,30361.0,certain,mileage decreased vs previous reading,34080.0
+21985,8654,34000,3079.0,3400.0,2714.0,3708.0,30292.0,certain,implied usage > 3018 km/day since previous reading,3000.0
+7880,9454,8937,39299.0,40505.0,39203.0,43200.0,30266.0,certain,mileage decreased vs previous reading,
+12361,9090,5347,4671.0,5347.0,35589.0,37810.0,30242.0,likely,outside the range of the readings before/after by 30242 km,
+19420,8620,3378,33788.0,34056.0,33601.0,34056.0,30223.0,certain,mileage decreased vs previous reading,33878.0
+4542,9438,9999,40362.0,40879.0,40198.0,41409.0,30199.0,certain,mileage decreased vs previous reading,
+7518,9420,116,116.0,30857.0,30138.0,31349.0,30022.0,likely,outside the range of the readings before/after by 30022 km,
+22915,9267,5200,35856.0,36398.0,35209.0,37170.0,30009.0,certain,mileage decreased vs previous reading,
+490,9265,1234,33169.0,33798.0,31215.0,37680.0,29981.0,certain,mileage decreased vs previous reading,31234.0
+22266,9453,503,31195.0,31830.0,30476.0,31917.0,29973.0,certain,mileage decreased vs previous reading,
+4338,9035,59892,29515.0,29921.0,29148.0,29921.0,29971.0,likely,outside the range of the readings before/after by 29971 km,
+7518,9416,116,30194.0,116.0,30082.0,31103.0,29966.0,certain,mileage decreased vs previous reading,
+5305,9539,4394,34308.0,39182.0,34308.0,40100.0,29914.0,certain,mileage decreased vs previous reading,34394.0

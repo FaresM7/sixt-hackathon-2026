@@ -83,6 +83,7 @@ def main() -> None:
     ap.add_argument("--drop", default="", help="comma-separated features to drop (ablation)")
     ap.add_argument("--step", type=int, default=30, help="days between training cutoffs")
     ap.add_argument("--tag", default="", help="suffix for the results file")
+    ap.add_argument("--params", default="", help="JSON from src.hpo (uses its final_params)")
     args = ap.parse_args()
     feats = FEATURES + (NEW_NUM if args.with_new else []) + (LEAKY if args.with_leaky else [])
     feats = [f for f in feats if f not in args.drop.split(",")]
@@ -131,10 +132,13 @@ def main() -> None:
 
     # ---- LightGBM on rate, weighted by gap => minimises MAE in km
     log("training LightGBM")
-    mdl = lgb.LGBMRegressor(objective="l1", n_estimators=3000, learning_rate=0.05, num_leaves=63,
-                            min_child_samples=200, subsample=0.8, subsample_freq=1,
-                            colsample_bytree=0.8, reg_lambda=5.0, n_jobs=16, verbose=-1,
-                            random_state=args.seed)
+    params = dict(objective="l1", learning_rate=0.05, num_leaves=63, min_child_samples=200,
+                  subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0)
+    if args.params:
+        import json
+        params.update(json.load(open(args.params))["final_params"])
+        log(f"tuned params from {args.params}")
+    mdl = lgb.LGBMRegressor(n_estimators=4000, n_jobs=16, verbose=-1, random_state=args.seed, **params)
     mdl.fit(tr[feats], tr.y_rate, sample_weight=tr.gap * tr.w_tgt,
             eval_set=[(inner[feats], inner.y_rate)], eval_sample_weight=[inner.gap * inner.w_tgt],
             callbacks=[lgb.early_stopping(100, verbose=False)])
