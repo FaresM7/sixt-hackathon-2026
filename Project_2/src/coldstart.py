@@ -37,7 +37,11 @@ def cold_samples(all_: pd.DataFrame, vehicles, cutoffs, horizon=150, max_day=Non
         hi = c + horizon if max_day is None else min(c + horizon, max_day)
         t = a[a[KEY].isin(v) & (a.day > c) & (a.day <= hi)]
         if max_targets:
-            t = t.assign(_r=rng.random(len(t))).sort_values("_r").groupby(KEY).head(max_targets)
+            t = t.assign(_r=rng.random(len(t)), _n=t.groupby(KEY)[KEY].transform("size"))
+            t = t.sort_values("_r").groupby(KEY).head(max_targets)
+            t = t.assign(w_tgt=t._n / np.minimum(t._n, max_targets)).drop(columns=["_r", "_n"])
+        else:
+            t = t.assign(w_tgt=1.0)
         if len(t):
             parts.append(cold_features(t, c))
     return pd.concat(parts, ignore_index=True)
@@ -48,4 +52,4 @@ def fit_cold(train: pd.DataFrame, seed=0, n_estimators=300) -> lgb.LGBMRegressor
     m = lgb.LGBMRegressor(objective="l1", n_estimators=n_estimators, learning_rate=0.05,
                           num_leaves=31, min_child_samples=100, subsample=0.8, subsample_freq=1,
                           colsample_bytree=0.8, n_jobs=16, verbose=-1, random_state=seed)
-    return m.fit(train[COLD_FEATS], train.km)
+    return m.fit(train[COLD_FEATS], train.km, sample_weight=train.w_tgt)

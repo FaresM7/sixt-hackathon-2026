@@ -6,8 +6,10 @@ true values we do not have. A 10% vehicle slice is used only to pick the number 
 the model is refitted on everything with that number of trees.
 
 Usage: python -m src.train_final [--step 30] [--max_targets 8] [--seed 0]
+       [--params results/hpo/<tag>_best.json]   (tuned LightGBM params from src.hpo)
 """
 import argparse
+import json
 
 import lightgbm as lgb
 import numpy as np
@@ -31,9 +33,14 @@ def main() -> None:
     ap.add_argument("--max_targets", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--final_cutoff", default="2026-07-01")
+    ap.add_argument("--params", default="", help="JSON from src.hpo (uses its final_params)")
     args = ap.parse_args()
     rng = np.random.default_rng(args.seed)
     c_fin = day_of(args.final_cutoff)
+    params = dict(PARAMS)
+    if args.params:
+        params.update(json.load(open(args.params))["final_params"])
+        log(f"using tuned params from {args.params}: {params}")
 
     log("loading labelled train file")
     all_, ok = prepare(TRAIN)
@@ -48,14 +55,14 @@ def main() -> None:
     tr = make_train(ok, all_, fit_v, cutoffs, c_fin, F, args, rng)
     inner = make_train(ok, all_, inner_v, cutoffs, c_fin, F, args, rng)
     log(f"samples: fit {len(tr):,}, inner {len(inner):,}")
-    m = lgb.LGBMRegressor(n_estimators=3000, random_state=args.seed, **PARAMS)
-    m.fit(tr[FEATURES], tr.y_rate, sample_weight=tr.gap, eval_set=[(inner[FEATURES], inner.y_rate)],
-          eval_sample_weight=[inner.gap], callbacks=[lgb.early_stopping(100, verbose=False)])
+    m = lgb.LGBMRegressor(n_estimators=4000, random_state=args.seed, **params)
+    m.fit(tr[FEATURES], tr.y_rate, sample_weight=tr.gap * tr.w_tgt, eval_set=[(inner[FEATURES], inner.y_rate)],
+          eval_sample_weight=[inner.gap * inner.w_tgt], callbacks=[lgb.early_stopping(100, verbose=False)])
     n_trees = int(m.best_iteration_ * 1.1)
     log(f"best iteration {m.best_iteration_} -> refit on all vehicles with {n_trees} trees")
     full = pd.concat([tr, inner], ignore_index=True)
-    model = lgb.LGBMRegressor(n_estimators=n_trees, random_state=args.seed, **PARAMS)
-    model.fit(full[FEATURES], full.y_rate, sample_weight=full.gap)
+    model = lgb.LGBMRegressor(n_estimators=n_trees, random_state=args.seed, **params)
+    model.fit(full[FEATURES], full.y_rate, sample_weight=full.gap * full.w_tgt)
     rate_cap = float(full.y_rate.quantile(0.999))
 
     # ---- cold-start model (vehicles without any reading before the cutoff)

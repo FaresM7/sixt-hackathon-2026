@@ -142,7 +142,7 @@ Weighting an L1 loss on the rate by `gap` makes the loss exactly `|km_hat - km_t
 2. **Systematic negative bias** (-382 km overall, -628 km at 91-150 d). Partly expected (L1 predicts the median, the rate distribution is right-skewed), partly a level shift (Jul-Nov 2025 drove more than the training average). => cheap bias calibration + "recent fleet level" features.
 3. **Short gaps have a high relative error** (WAPE 0.54 at 1-14 d): what the car does *right now* (on rent or parked, long- or short-term) dominates, history averages say little. => rental-state features matter most for the nowcast.
 
-Checked on the test file: in the last known row per test vehicle, 83% are OnRent, 15% LongTerm, 5% status 3 (defleet), and 25% carry a return date after 2026-07-01. So `ret_in` (days to the rental's return date) *is* available at the test cutoff, i.e. not leakage w.r.t. the test task. (Whether it is the planned or the actual return date is still worth asking the owners: if actual, it leaks real-world information that production would not have.)
+Checked on the test file: in the last known row per test vehicle, 83% are OnRent, 15% LongTerm, 5% status 3 (defleet), and 25% carry a return date after 2026-07-01. ~~So `ret_in` is not leakage w.r.t. the test task.~~ Superseded (section 14): the return date is the *actual* one, so for open rentals it is future information; `ret_in` is dropped from the headline model.
 
 ## 9. One model or two? (decision)
 
@@ -237,3 +237,84 @@ Ranked by business value x feasibility. #1-#3 are doable today in < 45 min each;
 4. P7 test predictions + cold-start fallback.
 5. Creative #1 (typo correction) and #2 (max-mileage date) if time remains; #3 as a slide.
 6. SUBMISSION.md, slides, `run_all.py`, fresh-clone run.
+
+## 14. Diagnosis of the -400 km bias and the "features don't help" plateau (13 Nov, afternoon)
+
+Observed: new features (group rates, shrunk rate, rental shares) -> MAE 1,444 (vs 1,438), bias -430. Per-gap calibration factors on the inner slice ~1.00-1.03, yet the held-out window is ~400 km low. Fleet km/day in Jul-Nov 2025 = 2024. Short intervals between readings show much higher km/day than long ones.
+
+**Root cause: the number of reports a car generates is itself a strong signal of how much it drives (informative sampling), and our training sample weights it differently from the evaluation.**
+
+Evidence (held-out window 2025-07-01..11-11, 8,166 vehicles, km/day from last reading before C to last reading in the window):
+
+| report days in window (quintile) | vehicles | median km/day |
+|---|---|---|
+| 1-10 | 1,740 | 29 |
+| 11-19 | 1,715 | 62 |
+| 20-25 | 1,685 | 74 |
+| 26-30 | 1,397 | 80 |
+| 31-49 | 1,629 | 83 |
+
+Spearman(#reports, km/day) = 0.52. Reports are triggered by rental events (handover, return, status change), so a busy car both drives more and reports more.
+
+- **Training** samples at most 8 random targets per vehicle (`max_targets=8`) => every vehicle has ~equal weight. The **inner slice** is built the same way => no bias there.
+- **Validation** (and the **test**!) score *every* reading => busy cars count ~3x more than quiet ones. Row-weighted median km/day = 76.7 vs vehicle-weighted 70.5: +6 km/day x ~65-day mean gap ≈ **400 km. This is the bias**, almost exactly.
+- The "short intervals = high km/day" effect is the same phenomenon seen from the other side, not a separate artifact.
+- Why the new features didn't help: they all describe the *past*. The remaining error is mostly *future* activity (will this car be rented a lot in the next 4 months?), which past usage barely predicts (fact 1 in section 8). Better past features can't fix a weighting mismatch or supply future information.
+
+The test file has the same structure: masked target dates per vehicle mean 20.1, median 21 (validation window: 20.7 / 22). So the test is scored the same row-weighted way as our validation, and the **schedule of target dates is visible in the test file**.
+
+### Fix 1 (clean, no debate): make training weights match the evaluation
+- Use all targets per vehicle in training (`--max_targets 0`) or keep the cap and weight each sample by `n_targets_vehicle / n_sampled` (x gap as now). Same for the inner slice so early stopping/calibration see the right distribution.
+- Expected: bias ~0, MAE down a bit (median shifts to the row-weighted one). Running now: `python -m src.run_forecast --frac 1.0 --max_targets 0 --tag _nocap`.
+- Same fix needed in `train_final.py`, `hpo.py`, `coldstart.py` (all use `max_targets=8`).
+
+### Fix 2 (big lever, needs a decision): "report-schedule" features
+The dates at which the test asks for predictions are known inputs. From them, per target row:
+- `n_tgt_window`: number of target dates of this vehicle in (C, C+150]; `tgt_per_30d` = density.
+- `n_tgt_before_t`: number of target dates in (last_day, t] (= how many rental events happened before t), and per day of gap.
+- `d_prev_tgt`, `d_next_tgt`: days to the neighbouring target dates (dense = active rental churn, a long hole = parked or long-term rental).
+- `last_tgt_day - C`: when the last report appears (a car whose reports stop early may be defleeted/sold).
+In training, compute exactly the same from the real readings after each pseudo-cutoff (their dates only, never their km). Given the table above (29 vs 83 km/day), this should beat every history feature we have.
+
+**Is it legitimate?**
+- *For this test file:* yes, the dates are part of the input; nothing about the km is used.
+- *For production:* the exact future report dates are not known, but the closest real equivalent is: **SIXT knows its future bookings** (reservation system: handovers/returns scheduled in the window, long-term contract end dates). Pitch it as "event-aware forecasting: booked rental days in the window"; the report schedule is our proxy for the booking calendar.
+- *Honest reporting:* show both numbers side by side: **history-only model** (strict nowcast, valid at any time) and **schedule-aware model** (uses known future event dates). Never mix them in one headline.
+
+### Other consequences
+- Report MAE both row-weighted (matches the test) and vehicle-weighted (each car counts once, the fleet-valuation view). The baselines must use the same weighting.
+- For B (anomalies): the residual z of a report should use the schedule-aware prediction when judging historical reports (the report dates around it are known then anyway).
+- Business story: "a car's rental activity, not its past mileage, drives its future mileage" is a strong insight slide, with the quintile table above.
+
+### Decisions (13 Nov, team)
+- **Fix 2 is rejected.** We do not derive any feature from the masked test rows (not even their dates): the test file's future part is the test, not an input. Only the known history up to the cutoff is used. The informative-sampling finding stays as an *insight* (slide + explanation of the bias), and Fix 1 handles the weighting.
+- **`rntl_return_date` is treated as the ACTUAL return date** (nearly all dates lie before today, 13 Nov 2026). For a rental still open at the cutoff, its return date is future information => `ret_in` and `ret_in_gap` are leakage for a real nowcast and must be dropped from the headline model. Handover date (`since_handover`) stays: it is in the past. Ablation `--drop ret_in,ret_in_gap` is running to measure how much the model leaned on it; expect the MAE to get somewhat worse, which is the honest number.
+- Production substitute (roadmap, not today): the *planned* return date / contract end from the booking system, which SIXT does know at the cutoff.
+
+## 15. HPO and optimisation after the model-family comparison (13 Nov, 12:15)
+
+Ridge 1,492 / HistGB 1,434 / LightGBM 1,426 km on the same split: model capacity is not the bottleneck. Expect HPO to give 1-3%, not more; it is worth running over the break but does not drive the story.
+
+**HPO review (fixed in `src/hpo.py`):**
+1. *Wrong search slice*: it used inner cutoffs in the last 150 days before the val cutoff; their targets are capped at the cutoff, so the search optimised short gaps (1-60 d) while the MAE is dominated by 60-150 d gaps. Now: cutoffs 150-365 d before the val cutoff (full horizon, includes the same season one year earlier).
+2. *Row-count params not transferable*: tuned on a 600k-row subsample, applied to ~2x+ more rows. `min_child_samples` / `min_data_per_group` are now rescaled (`final_params`).
+3. *Missing the parameters that matter here*: the pool code (high-cardinality categorical) carries ~40% of the gain; added `max_cat_threshold`, `min_data_per_group`, wider `cat_smooth`, and `min_split_gain`; num_leaves up to 511.
+4. *Resume re-queued the default trial* each time: now only on a new study. Multivariate TPE. Per-trial progress log, warning spam silenced.
+5. *Held-out check not comparable to run_forecast*: predictions now clipped to [0, p99.9 rate] like run_forecast; bias reported.
+6. `train_final.py --params <json>` applies the tuned params (off by default, the shipped predictions are unchanged).
+Smoke test (10% of vehicles, 50k rows, 1 min): 39 trials, inner MAE 1,490 vs default 1,521 (-2%), consistent with the expectation.
+
+**Optimisation methods ranked for the remaining time (beyond HPO):**
+1. *Ensemble of the three families* (mean or inner-fitted weights of LightGBM + HistGB + Ridge): their errors differ (Ridge bias +245, GBMs -120), so averaging typically gives 1-3% for free. Cheapest real gain.
+2. *Seed / bagging average* of 5 LightGBMs (different seeds + vehicle bootstraps): ~1%, also stabilises the result.
+3. *Per-vehicle random effect via target encoding of the vehicle's own past residuals*: the model's residual on the vehicle's earlier cutoffs (time-safe) as a feature. Captures "this car always runs hotter than its pool" better than raw rates.
+4. *Quantile heads + conformal bands*: no MAE gain, but required for anomaly flagging and the business story (uncertainty per car).
+5. *Multi-cutoff headline*: report mean ± spread over 3 cutoffs (results credibility > a 1% gain).
+**Result (12:15, `src.compare_models`, 50% of training vehicles, `logs/compare_ens.txt`)**: LightGBM 1,426; 4-seed bag 1,423; mean of the two GBMs 1,424; mean of all 3 1,428 (bias -3 but per-vehicle MAE worse); convex blend with inner-fitted weights (ridge 0.10 / HistGB 0.10 / bag 0.80) 1,422. => ensembling gains 0.3%, within noise. **Decision: ship the single LightGBM** (simpler, reproducible); mention the ensemble test as "tried, saturated". This, plus the Ridge result, is strong evidence that the model side is done and the limit is information, not capacity.
+
+Do not spend more time on: ensembles/bagging (tested, +0.3%), more history features, deeper models, denser cutoffs (all tested, no gain). The remaining error is future rental activity, which is not in any input; say so explicitly in SUBMISSION.md, together with the insight table from section 14.
+
+### Open questions (for us / for the owners)
+1. May the target-date schedule be used as a feature for the test predictions? (Ask Julian/Ernest; if unclear, ship both models and label them.)
+2. Is `rntl_return_date` the planned or the actual return date? If actual, it is future information in production (fine for the test file, but say so).
+3. Will the test be scored on all masked rows (row-weighted, as we assume) or per vehicle?
