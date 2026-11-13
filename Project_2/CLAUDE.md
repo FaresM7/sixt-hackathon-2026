@@ -18,6 +18,13 @@ One row per status update. Columns: see README.md. Key facts learned from `examp
 - `NotOnRent` rows have null handover/return dates. `vhcl_max_mileage` can change over time (25000 -> 24000). `status_code` 3 (defleet) has `uti_plan` = 0. First reading of a new car is ~5 km.
 - Example vehicle: ~70 km/day average, only ShortTerm rentals. The full data should contain long-term rentals with sparse reporting.
 
+## Implemented so far (baseline stage)
+- `src/data.py`: `load_raw`, `build_timeline` (OnRent rows -> one `start` obs per rental, NotOnRent rows -> `idle` obs, sorted, deduped), `quality_report`.
+- `src/evaluate.py`: `make_pairs` (simulated reporting lags 1/7/14/28 days, as-of features only), `metrics_table` (MAE, MedAE, WAPE, bias), `vehicle_split`, `time_cutoff`.
+- `src/baselines.py`: b0 carry-forward, b1 cumulative rate, b1b 90-day rate, b2 segment pooled rate.
+- Run: `..\.venv\Scripts\python.exe -m src.run_baselines [file.csv]` from `Project_2/` -> `results/baseline_metrics.csv`.
+- Note: WAPE of b0 is 1.0 by construction (denominator = |true delta|); judge models by MAE and WAPE relative to b0.
+
 ## Conventions
 - Python 3.11+, deps in `requirements.txt` (numpy, pandas, scikit-learn, matplotlib; add lightgbm if used). Root `.venv` exists but has no packages yet.
 - **No leakage**: features for a prediction at as-of date T may only use information available at T. Splits are by time (train < cutoff <= test) and by vehicle (held-out vehicles). Never random row splits.
