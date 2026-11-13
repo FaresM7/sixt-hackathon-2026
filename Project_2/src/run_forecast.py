@@ -8,7 +8,9 @@ later daily reading within `val_horizon` days. Training uses only earlier cutoff
 Usage: python -m src.run_forecast [--frac 0.5] [--cutoff 2025-07-01]
 """
 import argparse
+import json
 import time
+from pathlib import Path
 
 import lightgbm as lgb
 import numpy as np
@@ -133,11 +135,10 @@ def main() -> None:
 
     # ---- LightGBM on rate, weighted by gap => minimises MAE in km
     log("training LightGBM")
-    params = dict(objective="l1", learning_rate=0.05, num_leaves=63, min_child_samples=200,
-                  subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0)
+    params = {"objective": "l1", "learning_rate": 0.05, "num_leaves": 63, "min_child_samples": 200,
+                  "subsample": 0.8, "subsample_freq": 1, "colsample_bytree": 0.8, "reg_lambda": 5.0}
     if args.params:
-        import json
-        params.update(json.load(open(args.params))["final_params"])
+        params.update(json.loads(Path(args.params).read_text(encoding="utf-8"))["final_params"])
         log(f"tuned params from {args.params}")
     mdl = lgb.LGBMRegressor(n_estimators=4000, n_jobs=16, verbose=-1, random_state=args.seed, **params)
     mdl.fit(tr[feats], tr.y_rate, sample_weight=tr.gap * tr.w_tgt,
@@ -214,6 +215,9 @@ def main() -> None:
         bt = pd.DataFrame(rows).set_index("gap_days")
         print(f"\n=== 80% prediction bands (target coverage 0.80) ===\n{bt.round(3).to_string()}")
         bt.to_csv(HERE / "results" / f"bands{args.tag}.csv")
+        keep = [KEY, "cutoff", "day_t", "km_t", "ok_t", "km0", "last_day", "gap", "stale", "m_lgbm",
+                "b2_segment", "lo", "hi", "brnc_pool_code", "brnc_region_code", "rental_product"]
+        val[keep].to_parquet(HERE / "results" / f"val_preds{args.tag}.parquet", index=False)
 
 
 def segment_table(val: pd.DataFrame, models: list[str]) -> pd.DataFrame:

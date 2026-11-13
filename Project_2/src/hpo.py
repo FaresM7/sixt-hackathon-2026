@@ -27,8 +27,8 @@ from .features import build_samples, day_of, prep_right, seasonal_cumulative
 from .run_forecast import FEATURES, log, make_train
 from .series import HERE, KEY, prepare
 
-DEFAULT = dict(objective="l1", learning_rate=0.05, num_leaves=63, min_child_samples=200,
-               subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0)
+DEFAULT = {"objective": "l1", "learning_rate": 0.05, "num_leaves": 63, "min_child_samples": 200,
+               "subsample": 0.8, "subsample_freq": 1, "colsample_bytree": 0.8, "reg_lambda": 5.0}
 # parameters whose sensible value grows with the number of training rows
 ROW_SCALED = ("min_child_samples", "min_data_per_group")
 
@@ -85,19 +85,19 @@ def main() -> None:
         f"rows, gap median {inner.gap.median():.0f} d")
 
     def objective(trial: optuna.Trial) -> float:
-        p = dict(objective="l1", learning_rate=0.1, subsample_freq=1, n_jobs=args.n_jobs,
-                 verbose=-1, random_state=args.seed,
-                 num_leaves=trial.suggest_int("num_leaves", 31, 511, log=True),
-                 min_child_samples=trial.suggest_int("min_child_samples", 20, 1000, log=True),
-                 colsample_bytree=trial.suggest_float("colsample_bytree", 0.4, 1.0),
-                 subsample=trial.suggest_float("subsample", 0.5, 1.0),
-                 reg_lambda=trial.suggest_float("reg_lambda", 1e-2, 50, log=True),
-                 min_split_gain=trial.suggest_float("min_split_gain", 1e-3, 1.0, log=True),
+        p = {"objective": "l1", "learning_rate": 0.1, "subsample_freq": 1, "n_jobs": args.n_jobs,
+                 "verbose": -1, "random_state": args.seed,
+                 "num_leaves": trial.suggest_int("num_leaves", 31, 511, log=True),
+                 "min_child_samples": trial.suggest_int("min_child_samples", 20, 1000, log=True),
+                 "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
+                 "subsample": trial.suggest_float("subsample", 0.5, 1.0),
+                 "reg_lambda": trial.suggest_float("reg_lambda", 1e-2, 50, log=True),
+                 "min_split_gain": trial.suggest_float("min_split_gain", 1e-3, 1.0, log=True),
                  # brnc_pool_code carries ~40% of the gain: regularise high-cardinality splits
-                 cat_smooth=trial.suggest_float("cat_smooth", 1, 200, log=True),
-                 cat_l2=trial.suggest_float("cat_l2", 1, 100, log=True),
-                 max_cat_threshold=trial.suggest_int("max_cat_threshold", 8, 128, log=True),
-                 min_data_per_group=trial.suggest_int("min_data_per_group", 20, 500, log=True))
+                 "cat_smooth": trial.suggest_float("cat_smooth", 1, 200, log=True),
+                 "cat_l2": trial.suggest_float("cat_l2", 1, 100, log=True),
+                 "max_cat_threshold": trial.suggest_int("max_cat_threshold", 8, 128, log=True),
+                 "min_data_per_group": trial.suggest_int("min_data_per_group", 20, 500, log=True)}
         m = lgb.LGBMRegressor(n_estimators=2000, **p)
         m.fit(sub[feats], sub.y_rate, sample_weight=sub.gap * sub.w_tgt,
               eval_set=[(inner[feats], inner.y_rate)], eval_sample_weight=[inner.gap * inner.w_tgt],
@@ -123,11 +123,11 @@ def main() -> None:
     study.trials_dataframe().to_csv(out_dir / f"{args.tag}_trials.csv", index=False)
     best = study.best_params
     # tuned on `sub`; the full fit has `scale` x more rows => scale the row-count parameters
-    final = {k: (int(round(v * scale)) if k in ROW_SCALED else v) for k, v in best.items()}
+    final = {k: (round(v * scale) if k in ROW_SCALED else v) for k, v in best.items()}
     default_inner = done[0].value if done else float("nan")
-    json.dump({"best_params": best, "final_params": final, "row_scale": scale,
+    (out_dir / f"{args.tag}_best.json").write_text(json.dumps({"best_params": best, "final_params": final, "row_scale": scale,
                "inner_km_mae": study.best_value, "default_inner_km_mae": default_inner,
-               "n_trials": len(done)}, open(out_dir / f"{args.tag}_best.json", "w"), indent=2)
+               "n_trials": len(done)}, indent=2), encoding="utf-8")
     log(f"{len(done)} trials; best inner MAE {study.best_value:.1f} km (default {default_inner:.1f}); "
         f"final params {final}")
     if args.skip_heldout:
@@ -148,7 +148,7 @@ def main() -> None:
         res[name] = {"MAE": float(err.abs().mean()), "MedAE": float(err.abs().median()),
                      "bias": float(err.mean()), "trees": int(m.best_iteration_)}
         log(f"{name}: {res[name]}")
-    json.dump(res, open(out_dir / f"{args.tag}_heldout.json", "w"), indent=2)
+    (out_dir / f"{args.tag}_heldout.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(pd.DataFrame(res).T.round(1))
 
 

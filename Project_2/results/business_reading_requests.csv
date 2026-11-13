@@ -1,0 +1,21 @@
+scenario,cars_asked,strategy,fleet_error_reduction
+reading on the cutoff day,5%,widest 80% band (ours),0.007701979476303705
+reading on the cutoff day,5%,oldest last reading,0.00746658463537231
+reading on the cutoff day,5%,random cars (mean of 50),0.0022044578638876107
+reading on the cutoff day,10%,widest 80% band (ours),0.012545211583914778
+reading on the cutoff day,10%,oldest last reading,0.02135655223860165
+reading on the cutoff day,10%,random cars (mean of 50),0.005303472107514232
+reading on the cutoff day,20%,widest 80% band (ours),0.027399738745338426
+reading on the cutoff day,20%,oldest last reading,0.031218764929001743
+reading on the cutoff day,20%,random cars (mean of 50),0.010531241505668476
+reading on the cutoff day,100%,all cars,0.05190903169868408
+check-in reading 60 days after the cutoff,5%,widest 80% band (ours),0.022024521100686062
+check-in reading 60 days after the cutoff,5%,oldest last reading,0.006889919654407231
+check-in reading 60 days after the cutoff,5%,random cars (mean of 50),0.013907256508895308
+check-in reading 60 days after the cutoff,10%,widest 80% band (ours),0.05061454732911644
+check-in reading 60 days after the cutoff,10%,oldest last reading,0.03227696962741682
+check-in reading 60 days after the cutoff,10%,random cars (mean of 50),0.0281264240884426
+check-in reading 60 days after the cutoff,20%,widest 80% band (ours),0.08358440977543748
+check-in reading 60 days after the cutoff,20%,oldest last reading,0.05470911437609872
+check-in reading 60 days after the cutoff,20%,random cars (mean of 50),0.058281757313782497
+check-in reading 60 days after the cutoff,100%,all cars,0.27999270438447144

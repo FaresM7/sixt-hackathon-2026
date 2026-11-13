@@ -1,0 +1,5 @@
+level,groups,relative_error
+single reading (WAPE),34617,0.2580664221029706
+sum per branch pool,94,0.06512824013798706
+sum per region,27,0.052870548717989886
+whole held-out fleet,1,0.03618824468033821

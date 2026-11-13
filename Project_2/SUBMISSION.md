@@ -77,6 +77,10 @@ The gain holds in every period and season. The bias varies with the period (-453
 **Uncertainty: 80% prediction bands.** Quantile LightGBMs (10th/90th percentile of the rate) plus a split-conformal correction fitted on the inner slice. Measured coverage on the held-out vehicles: **82%** overall (80-84% in every horizon bucket; 77% before the correction). Median band width: 1,190 km at 1-14 days, 6,770 km at 91-150 days. Every forecast can therefore be shipped with a range, e.g. "23,400 km, 80% sure between 21,300 and 25,900".
 
 
+**Business value simulations** (`python -m src.business_sim`, on the held-out predictions, no new training):
+- **Fleet-level error is small.** Valuation and defleet planning look at totals. The error relative to km driven is 26% for a single reading, but errors cancel when summed: **6.5% per branch pool, 5.3% per region, 3.6% for the whole held-out fleet**.
+- **Where to ask customers for a reading.** A fresh reading on the cutoff day barely helps (removes 5% of the total error even if *every* car reports): most cars' last reading is < 1 week old, so the error is about *future* usage. A **check-in reading 60 days into the window** removes 28% of the total error if every car reports. Asking only the 20% of cars with the widest 80% band removes 8.4% (vs 5.8% for 20% random cars; 10%: 5.1% vs 2.8%): the bands identify where a reading is worth ~1.5-1.8x more. Simplification: after the reading, the same predicted km/day is applied (no re-forecast).
+
 **Test predictions**: all 163,047 masked test rows predicted (`results/test_predictions.csv`), median implied usage 79 km/day (IQR 70-87). No ground truth is available to us, so these are unscored.
 
 ### Erroneous mileage detection (task B), `src/anomalies.py`
@@ -102,6 +106,8 @@ Results (alarm budget = share of non-injected readings flagged; precision is a l
 **Typo auto-correction** (flagged injected typos): for a flagged reading we try digit insertions/deletions, adjacent swaps and x1.609, and suggest the candidate inside the expected range closest to the interpolated value. Exact recovery: miles-as-km 98%, swapped digits 97%, extra digit 54% (87% within 100 km), dropped digit 37% (67% within 100 km; the missing digit is often ambiguous).
 
 **On the real data** (all 1.78M daily readings, no injection): 8,642 readings flagged (0.49%): 4,147 certain (rules), 4,495 likely (two-sided); 32% come with a suggested correction. Top 500 with reasons in `results/anomaly_flags_top.csv`, examples plotted in `results/plots/anomaly_examples.png`.
+
+**On the organisers' test file** (known history up to 2026-07-01, `python -m src.anomalies --flag_file data/test_data.parquet`): 1,018 of 330,598 readings flagged (0.31%) in 644 of 8,105 vehicles (586 certain, 432 likely), 38% with a suggested correction. The top flags are textbook typos with an exact fix, e.g. 551,098 km between readings of 55,074 and 55,412 -> suggested 55,109; 400,695 between 40,549 and 40,696 -> 40,695; 386,199 between 38,460 and 38,619 -> 38,619. Full list with vehicle ids and dates: `results/anomaly_flags_test_data.csv`.
 
 **What did not work / limits (honest):**
 - More features (pool/region/fleet recent rates, shrunk car rate, on-rent shares) gave no gain at 3 cutoffs.
@@ -131,6 +137,8 @@ python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --cutof
 python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --cutoff 2025-01-01 --val_end 2025-05-14 --tag _tuned_c2501   # robustness, 3rd cutoff (~10 min)
 python -m src.compare_models --frac 0.5     # model-family comparison and ensembles (~5 min)
 python -m src.eval_coldstart                # cold-start model validation (~1 min)
+python -m src.business_sim                  # fleet-level error + reading-request simulation (needs the --bands run; ~1 min)
+python -m src.make_charts                   # slide charts -> results/plots/
 python -m src.hpo --minutes 60 --tag hpo    # hyper-parameter search; rewrites results/hpo/hpo_best.json (~75 min)
 ```
 Seeds are fixed (seed 0, same vehicle split in every script). No environment variables or secrets needed.

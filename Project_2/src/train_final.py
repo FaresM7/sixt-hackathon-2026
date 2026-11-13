@@ -10,6 +10,7 @@ Usage: python -m src.train_final [--step 30] [--max_targets 8] [--seed 0]
 """
 import argparse
 import json
+from pathlib import Path
 
 import lightgbm as lgb
 import numpy as np
@@ -18,13 +19,23 @@ import pandas as pd
 from .coldstart import COLD_FEATS, cold_features, cold_samples, fit_cold
 from .features import build_samples, day_of, prep_right, seasonal_cumulative
 from .run_forecast import FEATURES, log, make_train
-from .series import EPOCH, HERE, KEY, STATIC_COLS, daily_series, flag_outliers, load_parquet, ok_series, prepare
+from .series import (
+    EPOCH,
+    HERE,
+    KEY,
+    STATIC_COLS,
+    daily_series,
+    flag_outliers,
+    load_parquet,
+    ok_series,
+    prepare,
+)
 
 TRAIN = HERE / "data" / "data_30_percent_sample.parquet"
 TEST = HERE / "data" / "test_data.parquet"
-PARAMS = dict(objective="l1", learning_rate=0.05, num_leaves=63, min_child_samples=200,
-              subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0,
-              n_jobs=16, verbose=-1)
+PARAMS = {"objective": "l1", "learning_rate": 0.05, "num_leaves": 63, "min_child_samples": 200,
+              "subsample": 0.8, "subsample_freq": 1, "colsample_bytree": 0.8, "reg_lambda": 5.0,
+              "n_jobs": 16, "verbose": -1}
 
 
 def main() -> None:
@@ -39,7 +50,7 @@ def main() -> None:
     c_fin = day_of(args.final_cutoff)
     params = dict(PARAMS)
     if args.params:
-        params.update(json.load(open(args.params))["final_params"])
+        params.update(json.loads(Path(args.params).read_text(encoding="utf-8"))["final_params"])
         log(f"using tuned params from {args.params}: {params}")
 
     log("loading labelled train file")

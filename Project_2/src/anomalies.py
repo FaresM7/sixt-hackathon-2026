@@ -25,6 +25,7 @@ Outputs: results/anomaly_eval.csv, results/anomaly_flags_top.csv, results/plots/
 import argparse
 import json
 import warnings
+from pathlib import Path
 
 import lightgbm as lgb
 import numpy as np
@@ -232,12 +233,17 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--cutoff", default="2025-07-01")
     ap.add_argument("--val_end", default="2025-11-11")
+    ap.add_argument("--flag_file", default="", help="only flag the known readings of this parquet "
+                    "(e.g. data/test_data.parquet) with the thresholds of the main run, then exit")
     args = ap.parse_args()
     warnings.simplefilter("ignore", FutureWarning)
     rng = np.random.default_rng(args.seed)
     res = HERE / "results"
     (res / "plots").mkdir(parents=True, exist_ok=True)
 
+    if args.flag_file:
+        flag_only(HERE / args.flag_file, res)
+        return
     log("loading + cleaning")
     all_, ok = prepare(HERE / "data" / "data_30_percent_sample.parquet")
     vids = np.sort(all_[KEY].unique())
@@ -287,11 +293,11 @@ def main() -> None:
         a = argparse.Namespace(max_targets=8)
         tr = make_train(ok, all_, train_v, cutoffs, c_val, F, a, rng)
         inner = make_train(ok, all_, inner_v, cutoffs, c_val, F, a, rng)
-        params = dict(objective="l1", learning_rate=0.05, num_leaves=63, min_child_samples=200,
-                      subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0)
+        params = {"objective": "l1", "learning_rate": 0.05, "num_leaves": 63, "min_child_samples": 200,
+                      "subsample": 0.8, "subsample_freq": 1, "colsample_bytree": 0.8, "reg_lambda": 5.0}
         hp = res / "hpo" / "hpo_best.json"
         if hp.exists():
-            params.update(json.load(open(hp))["final_params"])
+            params.update(json.loads(Path(hp).read_text(encoding="utf-8"))["final_params"])
         log(f"training forward model on {len(tr):,} rows")
         m = lgb.LGBMRegressor(n_estimators=700, n_jobs=16, verbose=-1, random_state=args.seed, **params)
         m.fit(tr[FEATURES], tr.y_rate, sample_weight=tr.gap * tr.w_tgt)
@@ -336,6 +342,34 @@ def main() -> None:
     top[cols].head(500).to_csv(res / "anomaly_flags_top.csv", index=False)
     plot_examples(real, top, res / "plots" / "anomaly_examples.png")
     log("done")
+
+
+def flag_only(path, res) -> None:
+    """Flag the known readings of another file (no injection, no evaluation). The likely-tier
+    threshold and the rate cap are taken from the main run (results/anomaly_eval.csv) when present."""
+    all_, _ = prepare(path)
+    cap = interval_rate_cap(all_)
+    thr = 0.0
+    ev_path = res / "anomaly_eval.csv"
+    if ev_path.exists():
+        e = pd.read_csv(ev_path)
+        thr = float(e[(e.detector == "two_sided") & (e.budget == "1.0%")].threshold.iloc[0])
+    real = neighbours(all_)
+    real["rule"] = rule_flags(real, cap)
+    real["tier"] = np.where(real.rule != "", "certain", np.where(real.two_sided > thr, "likely", ""))
+    real["reason"] = np.where(real.rule != "", real.rule, "outside the range of the readings before/after by "
+                              + real.two_sided.round(0).astype(int).astype(str) + " km")
+    f = real[real.tier != ""].copy()
+    f["suggested_km"] = [suggest_fix(r.km, r.lo, r.hi, r.expected) for r in f.itertuples()]
+    log(f"{path.name}: {len(real):,} known daily readings of {real[KEY].nunique():,} vehicles; flagged "
+        f"{len(f):,} ({len(f) / len(real):.2%}) in {f[KEY].nunique():,} vehicles; tiers "
+        f"{f.tier.value_counts().to_dict()}; with a suggested correction {f.suggested_km.notna().mean():.1%}")
+    cols = [KEY, "day", "km", "km_p", "km_n", "lo", "hi", "two_sided", "tier", "reason", "suggested_km"]
+    f = f.sort_values("two_sided", ascending=False)[cols]
+    ids = pd.factorize(pd.read_parquet(path, columns=[KEY])[KEY])[1]    # same coding as load_parquet
+    f[KEY] = ids[f[KEY].to_numpy()]
+    f.insert(1, "date", (pd.Timestamp("2000-01-01") + pd.to_timedelta(f.day, unit="D")).dt.date)
+    f.drop(columns="day").to_csv(res / f"anomaly_flags_{path.stem}.csv", index=False)
 
 
 def plot_examples(real: pd.DataFrame, top: pd.DataFrame, path) -> None:

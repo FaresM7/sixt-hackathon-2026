@@ -11,6 +11,9 @@ vehicle counts once. Rows `targets=all` include flagged readings (as the hidden 
 | `forecast_val_tuned_c2407.csv`, `forecast_val_tuned_c2501.csv` | robustness: tuned model at cutoffs 2024-07-01 and 2025-01-01 | 1,560 / 1,379 |
 | `forecast_seg_tuned.csv` | MAE by segment (rental product, on rent, fleet status, history length, last-reading age) | |
 | `bands_tuned.csv` | 80% prediction bands: coverage raw / conformal, width, per horizon | coverage 0.82 |
+| `val_preds_tuned.parquet` | per-row held-out predictions incl. 80% band (from the `--bands` run) | |
+| `business_fleet_aggregation.csv`, `business_reading_requests.csv` | `src.business_sim`: error per pool/region/fleet; value of requesting readings | fleet 3.6% |
+| `anomaly_flags_test_data.csv` | task B flags on the test file's known history (`--flag_file data/test_data.parquet`) | 1,018 flags |
 | `coldstart_val.csv` | `src.eval_coldstart`: cold-start model vs new-car baselines | 2,465 vs 2,763 |
 | `plots/forecast_by_horizon.png`, `plots/anomaly_vs_starter.png` | slide charts (`src.make_charts`) | |
 | `forecast_val_fix1.csv` | target-count weighting, no return-date features, base features, default params | 1,427 / -194 |

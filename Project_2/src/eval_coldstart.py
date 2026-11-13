@@ -25,7 +25,7 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     rng = np.random.default_rng(args.seed)
-    all_, ok = prepare(HERE / "data" / "data_30_percent_sample.parquet")
+    all_, _ok = prepare(HERE / "data" / "data_30_percent_sample.parquet")
     vids = np.sort(all_[KEY].unique())
     rng.shuffle(vids)                                   # same split as run_forecast (seed 0)
     n_val = int(0.2 * len(vids))
