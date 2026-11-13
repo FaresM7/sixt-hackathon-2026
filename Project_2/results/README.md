@@ -21,8 +21,8 @@ vehicle counts once. Rows `targets=all` include flagged readings (as the hidden 
 | `forecast_val_nocap_noret.csv` | all targets, return-date features dropped (dropping them costs nothing) | 1,429 / -268 |
 | `forecast_val_c24_old/new.csv` | cutoff 2024-07-01; old = base features, new = + group-rate features | 1,591 / 1,586 |
 | `forecast_val_c25a_old/new.csv` | second 2025 cutoff; old vs new features | 1,386 / 1,385 |
+| `forecast_val_c2507_old/new.csv` | cutoff 2025-07-01; old vs new features (earlier setup, still with return-date features) | 1,440 / 1,444 |
 | `model_comparison.csv` | `src.compare_models` (50% of training vehicles): Ridge, HistGB, LightGBM, seed bag, ensembles | see file |
 | `anomaly_eval.csv`, `anomaly_correction.csv`, `anomaly_flags_top.csv`, `plots/anomaly_examples.png` | task B (`src.anomalies`): injection eval, typo-correction accuracy, top real flags, examples | |
 | `hpo/` | `src.hpo` study (`<tag>.db`), trials, best params, tuned-vs-default held-out check | |
 | `test_predictions.csv` | `src.train_final`: predictions for all 163,047 masked test rows (git-ignored, unscored) | |
-| `archive/` | superseded runs (capped targets without re-weighting and/or leaky return-date features); kept for the history only | 1,438-1,487 |

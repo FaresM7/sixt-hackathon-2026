@@ -1,5 +1,7 @@
 # CLAUDE.md: SIXT Hackathon 2026, Project 2 (Mileage Forecasting & Erroneous Mileage Detection)
 
+> Working notes for the coding agent, kept for transparency. Final approach and results: `SUBMISSION.md`.
+
 ## Context
 - One-day hackathon, Fri 13 Nov 2026. Hacking 09:30-13:00 and 13:45-16:45. **Submission freeze 16:45** (we self-freeze code at 16:15).
 - Work ONLY in `Project_2/`. Public/mock data only. No secrets in git (`.env` is git-ignored). No branches in the shared repo; work on our own fork/clone.
@@ -30,7 +32,7 @@ One row per status update. Columns: see README.md. Key facts learned from `examp
 - `src/features.py`: `build_samples` makes (vehicle, cutoff, target day) rows with as-of features (last km, staleness, rates over 7/30/90/180/365 d, cumulative rate, rental state, static attrs, location, seasonal factor); target = km rate per day.
 - `src/baselines.py`: b0 carry-forward, b1 cumulative rate, b1b 90-day rate, b2 segment pooled rate.
 - `src/run_forecast.py`: validation at a pseudo-cutoff (default 2025-07-01, held-out 20% vehicles, targets to 2025-11-11) + LightGBM (L1 on rate, weight=gap). Run from `Project_2/`: `..\.venv\Scripts\python.exe -m src.run_forecast --frac 1.0 --tag _all`; flags `--drop f1,f2` (ablation), `--step`, `--cutoff`.
-- Results so far (held-out vehicles, 2025-07-01 cutoff): LightGBM MAE ~1,438 km vs best naive (segment rate) 1,680 km; no-location-features ablation 1,487 km. See `results/forecast_val_*.csv`.
+- Early result (superseded, leaky return-date features + unweighted targets): LightGBM MAE ~1,438 km vs segment 1,680. Final numbers: SUBMISSION.md.
 - `src/train_final.py`: final fit on ALL labelled vehicles (cutoff 2026-07-01; #trees chosen on a 10% vehicle slice, then refit on everything) + predictions for all 163,047 masked test rows -> `results/test_predictions.csv` (git-ignored; no true values exist, so it is not scored). Includes `src/coldstart.py` model for the 149 vehicles (3,745 rows) without history (NOT validated yet). Run: `python -m src.train_final` (~12 min).
 - **Robustness / segments / bands / cold start (14:45)**: tuned MAE at 3 cutoffs 1,560 / 1,379 / 1,416 (mean 1,452) vs segment 1,837 / 1,564 / 1,680 (-12..-16%). Segments: LongTerm 2,052 vs 2,278; last reading > 28 d old 1,722 vs 3,291. 80% bands (quantile LGBM + conformal per gap bucket, `--bands`): coverage 0.82. Cold start (`src/eval_coldstart.py`): 2,465 vs 2,763. Slide charts: `python -m src.make_charts`. SUBMISSION.md is complete except slides.
 - **Task B done (14:05), `src/anomalies.py`** (`python -m src.anomalies`, ~2 min; `--no_forward` skips the model part): rules (absurd, reset, drop, rate > p99.9 = 3,018 km/d; drop/rate only on the culprit reading) + two-sided score (5 neighbours per side, two passes, not blamed if consistent with one side: AGREE_KM 300 + 150 km/day) + forward score with the task-A LightGBM (real-time mode). Injection eval on held-out vehicles (1%, 7 error types): rules+two-sided flags 0.5% of readings, recall 0.92 for errors >= 1,000 km, precision lower bound 0.57; starter.py rules: 2.6% flagged, 0.93, 0.21. Stuck odometer 0% (undetectable). Typo auto-correction exact: miles 98%, swap 97%, extra digit 54%, dropped digit 37%. Real data: 0.49% flagged. Outputs: `results/anomaly_eval.csv`, `anomaly_correction.csv`, `anomaly_flags_top.csv`, `plots/anomaly_examples.png`.
@@ -45,7 +47,7 @@ One row per status update. Columns: see README.md. Key facts learned from `examp
 - Segment rate beats the vehicle's own rate => next feature work = shrunk vehicle rate + time-safe group-level recent rates (pool/region/level/product/fleet). Model has a negative bias (-382 km, -628 at 91-150 d) => bias calibration on inner-val.
 - **Bias root cause (PLAN.md section 14)**: #reports per car correlates with its km/day (Spearman 0.52; 29 km/d for cars with <=10 reports in the Jul-Nov window vs 83 for 31+). Training caps 8 targets per vehicle (equal vehicle weight); validation and test score every reading (busy cars weigh ~3x) => ~-400 km bias. Fix 1: train with all targets / weight by target count (`--max_targets 0`). Fix 2 (features from the masked test dates) is REJECTED by the team: nothing from the masked test rows is used as input.
 - **`rntl_return_date` = actual return date** => `ret_in` / `ret_in_gap` leak the future for rentals open at the cutoff; drop them from the headline model (`--drop ret_in,ret_in_gap`). `since_handover` is fine.
-- Next: bands (quantile + conformal), `src/anomalies.py` with synthetic injection eval, test predictions incl. cold start, creative extras (typo auto-correction, max-mileage crossing date, value-of-information reporting policy).
+- Done since: bands, `src/anomalies.py`, test predictions incl. cold start, typo auto-correction, business simulations (see entries above and SUBMISSION.md).
 
 ## Conventions
 - Python 3.11+, deps in `requirements.txt` (numpy, pandas, scikit-learn, matplotlib, pyarrow, lightgbm), installed in the root `.venv`.
@@ -55,10 +57,10 @@ One row per status update. Columns: see README.md. Key facts learned from `examp
 - Do not edit `starter.py` (keep as the baseline reference); new code goes in `src/`.
 
 ## Deliverables checklist (by 16:45)
-- [ ] code in `Project_2/`, runs from `SUBMISSION.md` (template: `../SUBMISSION_TEMPLATE.md`, must state "Project 2")
-- [ ] `submission/slides.pdf` (max 5) or `submission/demo.mp4` (<50 MB, 1 min)
-- [ ] evaluation results table with baseline comparison, honest limitations
+- [x] code in `Project_2/`, runs from `SUBMISSION.md` (template: `../SUBMISSION_TEMPLATE.md`, must state "Project 2")
+- [x] `submission/slides.pdf` (max 5) or `submission/demo.mp4` (<50 MB, 1 min)
+- [x] evaluation results table with baseline comparison, honest limitations
 - [ ] repo public, link = the one in the registration form
-- [ ] 3-min pitch prepared (in case of finalist selection)
+- [x] 3-min pitch prepared (in case of finalist selection)
 
 See `PLAN.md` for the approach, evaluation design and timeline.

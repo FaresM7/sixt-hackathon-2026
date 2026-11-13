@@ -1,6 +1,6 @@
 # PLAN: Project 2, Mileage Nowcast / Forecast / Anomaly Flagging
 
-Draft v1 (written before seeing the full data). Revise after the first 30 min of EDA.
+> Working plan, kept for transparency: Part I was written before seeing the data, Part II (sections 8-15) records the decisions made during the day. Final approach and results: `SUBMISSION.md`.
 
 ## 0. Core idea (one sentence for the pitch)
 Model each vehicle's odometer as `last known reading + (usage rate) x (elapsed days)`, learn the usage rate with a gradient-boosted model plus quantile bands, and use the same expected value + band to flag reports that fall outside it, backed by physical-plausibility rules.

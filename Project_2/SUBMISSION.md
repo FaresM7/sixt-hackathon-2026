@@ -1,7 +1,5 @@
 # Submission: Project 2, The golden butterfly
 
-> Status 13 Nov, 14:45. TODO: slides.
-
 ## Authors
 **Team name:** The golden butterfly
 
@@ -144,7 +142,7 @@ python -m src.hpo --minutes 60 --tag hpo    # hyper-parameter search; rewrites r
 Seeds are fixed (seed 0, same vehicle split in every script). No environment variables or secrets needed.
 
 ## Demo
-TODO: `submission/slides.pdf` (max 5 slides).
+Slides (5): [`submission/slides.pdf`](submission/slides.pdf). Charts used in the slides: `results/plots/` (regenerate with `python -m src.make_charts`).
 
 ## Next steps
 1. **Use SIXT's booking calendar** (future rentals, planned return dates, contract ends): our analysis shows that future rental activity is the missing information, and SIXT already has it.
