@@ -1,7 +1,7 @@
 """Naive baselines. Each takes the pairs frame and returns predicted km at the target date."""
 import pandas as pd
 
-from .data import KEY
+from .series import KEY
 
 SEG = ["vehicle_level", "vehicle_type"]
 

@@ -17,3 +17,6 @@ quickstart_answers.csv
 Project_1/preds.jsonl
 Project_4/plans/baseline.csv
 Project_6/starter/predictions.csv
+Project_2/results/test_predictions.csv
+Project_2/results/hpo/
+Project_2/logs/

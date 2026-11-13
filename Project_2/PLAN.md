@@ -108,3 +108,132 @@ If 2-3 people: person 1 = data + A (nowcast/forecast), person 2 = B (rules, inje
 - Nowcast lets valuation and defleet planning use today's km instead of a month-old report, quantified as MAE reduction vs carry-forward and vs starter baseline.
 - Forecast km at planned defleet date -> choose sale timing before contract/max-mileage limits, flag cars about to exceed `vhcl_max_mileage` (excess-km fees).
 - Flags route to a human review queue with a reason, so wrong or manipulated reports are caught early. Next steps: calibrate on real confirmed errors, integrate as a nightly batch job, add telematics where available.
+
+---
+
+# PART II (v2, 13 Nov, after the first real-data results): model, design decision, optimisation roadmap
+
+## 8. What is actually built (status quo, honest)
+
+**Model.** One LightGBM regressor (`src/run_forecast.py`), objective L1, target = **km/day rate** `y_rate = (km_t - km0) / gap`, sample weight = `gap`. Prediction = `km0 + rate_hat * gap`.
+Weighting an L1 loss on the rate by `gap` makes the loss exactly `|km_hat - km_t|`: we minimise MAE in km directly, while the target stays scale-free across horizons.
+
+**Samples (direct multi-horizon, no recursion).** For many pseudo-cutoffs C (every 30 days from 2023-03-01) and every training vehicle: freeze everything known at C, sample up to 8 later readings t (<= 150 days ahead, never beyond the validation cutoff) as targets. `gap = t - last_day` (includes the staleness of the last report), `h = t - C`. This mimics the test exactly: last known reading can be weeks old, targets 1-147 days later, no rental status at t.
+
+**Features (as of C only).** Last km, staleness, rates over 7/30/90/180/365 d, cumulative rate, #readings in 90 d, history length, km left to max mileage, rental state at the last reading (on rent, product, one-way, days since handover, days to return date), status code, uti_plan, static vehicle attributes, branch pool/region/state, target month/day-of-year, a fleet seasonal factor fitted on the training period.
+
+**Cleaning.** One reading per vehicle-day (max). Two-sided outlier rule (a reading breaks monotonicity vs the median of its 3 previous / 3 next readings by > 100 km, or absurd values). Clean series forced monotone with `cummax`. Training targets: clean readings only. Validation targets: reported with and without flagged readings.
+
+**Validation.** Held-out 20% of vehicles, cutoff 2025-07-01 (same season as the real test cutoff 2026-07-01), targets until 2025-11-11 (same span as the test). 34.6k target readings.
+
+| model (held-out vehicles, all targets) | MAE km | MedAE | WAPE | bias |
+|---|---|---|---|---|
+| b0 carry-forward | 5,486 | 4,989 | 1.00 | -5,414 |
+| b1 vehicle cumulative rate (≈ starter.py) | 2,200 | 1,324 | 0.40 | -320 |
+| b1b vehicle 90-day rate | 2,335 | 1,405 | 0.43 | -56 |
+| b2 segment pooled rate | 1,680 | 1,158 | 0.31 | -547 |
+| **LightGBM** | **1,438** | **949** | **0.26** | -382 |
+| LightGBM without location features | 1,487 | 1,023 | 0.27 | -230 |
+
+-35% MAE vs the starter-like baseline, -14% vs the best naive baseline. The gain grows with the gap (91-150 d: 1,999 vs 2,357 segment vs 3,395 starter).
+
+**Three facts in these numbers that drive the next steps:**
+1. **The segment rate beats the vehicle's own rate** (1,680 vs 2,200). A rental car's past usage is a weak predictor of its future usage (different customers each time). The signal sits mostly at *fleet/segment/location level*; the vehicle's own history only adds a correction. => shrinkage and group-level rate features are the most promising feature work.
+2. **Systematic negative bias** (-382 km overall, -628 km at 91-150 d). Partly expected (L1 predicts the median, the rate distribution is right-skewed), partly a level shift (Jul-Nov 2025 drove more than the training average). => cheap bias calibration + "recent fleet level" features.
+3. **Short gaps have a high relative error** (WAPE 0.54 at 1-14 d): what the car does *right now* (on rent or parked, long- or short-term) dominates, history averages say little. => rental-state features matter most for the nowcast.
+
+Checked on the test file: in the last known row per test vehicle, 83% are OnRent, 15% LongTerm, 5% status 3 (defleet), and 25% carry a return date after 2026-07-01. So `ret_in` (days to the rental's return date) *is* available at the test cutoff, i.e. not leakage w.r.t. the test task. (Whether it is the planned or the actual return date is still worth asking the owners: if actual, it leaks real-world information that production would not have.)
+
+## 9. One model or two? (decision)
+
+**Decision: one prediction engine used in two modes, plus a thin rule layer. No separate anomaly ML model.**
+
+```
+              +-----------------------------------------------+
+ history ---> | ENGINE: expected km at date t given history   |---> A. nowcast / forecast (median + 80/90% band)
+ up to as-of  | LightGBM rate (q50) + band (quantile/conformal)|
+              +-----------------------------------------------+
+                             | same engine, as-of = day BEFORE the report
+                             v
+ report r --> residual z = (km_r - pred) / band width ----+
+          --> two-sided consistency (prev AND next reads) +--> anomaly score + reason + tier  (B)
+          --> physical rules (decrease, > cap km/d, > max) +
+```
+
+Why not two separate models:
+- **There are no labels for B.** A separately trained anomaly classifier could only learn from our own synthetic injections, i.e. it would learn our injection generator, not real errors. Unsupervised alternatives (IsolationForest on raw features) don't know what "expected usage" is; the forecast model does.
+- **B's quality is A's quality.** A flag means "far from expected"; the better the expectation and its uncertainty, the better the flag. Every improvement to A improves B for free. One feature pipeline, one model to tune, one story for the pitch (the README itself suggests this link).
+- What B needs on top is *not* a second model but **(a) an uncertainty band** (a 2,000 km deviation is huge for a parked car and normal for a long-term rental after 90 days) and **(b) the two-sided view**: when judging a historical report we also see the readings *after* it, which is far more precise than any forecast. A spike followed by readings consistent with the ones before it = typo. A jump after which all later readings stay shifted = level shift (cluster swap, or the earlier history was wrong). `series.flag_outliers` is already a primitive two-sided check.
+
+When B *would* justify its own model: once SIXT confirms some flags (review queue => labels), train a small supervised classifier on [residual z, two-sided deviation, rule hits, gap, rental product, ...]. That is a "next step" slide, not a today task.
+
+Caveat to state honestly: the outlier filter is used both to clean training targets and inside B. Fine for training, but in the B evaluation report rules-only, residual-only and combined separately so we don't grade our rules with our rules.
+
+## 10. Optimisation roadmap for the engine (ordered by expected gain per hour)
+
+Each step: `python -m src.run_forecast --frac 1.0 --tag _<name>`; keep only if held-out MAE improves; log each row in an ablation table (that table is itself a results slide).
+
+**P1. Free gains (<= 30 min)**
+- All training vehicles (`--frac 1.0`), denser cutoffs (`--step 14`), more targets per vehicle (`--max_targets 16`).
+- **Bias calibration**: on inner-val, fit a multiplicative factor per gap bucket `k = median(true delta) / median(pred delta)` and apply it. Alternative: weight training cutoffs by recency (`w *= 0.5 ** age_years`) so recent behaviour dominates.
+- Clip `rate_hat` to [0, p99.9 of training rates].
+- Seed-average 3-5 LightGBMs (~1-2%).
+
+**P2. Feature engineering (the real lever, 1-2 h)**, all strictly as of C:
+- *Shrunk vehicle rate*: `(n_eff * rate_v + k * rate_seg) / (n_eff + k)`, n_eff = history days / 30, k ≈ 3-6 (tune). Encodes fact 1 directly; trees approximate this blend poorly.
+- *Group-level recent rates (time-safe target encodings)*: pooled km/day over the last 30/90 days for the vehicle's **pool, region, vehicle_level, rental_product**, and the whole fleet, from other vehicles' readings <= C. Captures local demand and the current fleet level (fixes fact 2). Also the same group's rate *in the target month last year* (regional seasonality: Florida winter vs Northeast summer).
+- *Rental-behaviour history*: share of days on rent in the last 90/365 d, number of rentals, mean rental length, share LongTerm, km/day while on rent vs while idle. Physical model: expected km = P(on rent) x on-rent rate; give the GBM those ingredients.
+- *Rate robustness*: median of per-interval rates, EWM rates (half-life 14/60 d), rate CV, last-interval rate, share of zero-movement intervals.
+- *Lifecycle*: age in months, km / age, `km0 / vhcl_max_mileage`, days since status became 3 (defleet cars stop driving). Cars near max mileage get defleeted => rate collapses.
+- *Calendar over the forecast window*: number of US public holidays and weekend days in (last_day, t], summer share of the window.
+- *State x window*: `min(ret_in, gap)` = days of the window still on the current rental.
+Ablation by feature group (history / rental state / vehicle / location / calendar) => slide.
+
+**P3. Target / loss variants (30 min)**
+- Predict the rate *relative to the shrunk/segment rate* (`y_rate / base_rate` or `y_rate - base_rate`): an easier job for the GBM, helps vehicles with short histories.
+- L1 vs Huber vs L2 (+bias correction), keep weight = gap, pick by held-out MAE.
+
+**P4. Hyper-parameter search (background, <= 35 min wall clock)**
+Optuna/random search: num_leaves 31-255, min_child_samples 50-1000, learning_rate 0.02-0.1, feature_fraction, lambda_l2, cat_smooth for the high-cardinality pool codes. Inner-val (vehicle-disjoint), early stopping. Expect 2-5%.
+
+**P5. Robustness of the evaluation (must-have for the "results" points)**
+- Backtest at 3 cutoffs (2024-07-01, 2025-01-01, 2025-07-01): mean ± spread of MAE, model vs baselines. Shows the gain is not one lucky season.
+- Per segment: ShortTerm vs LongTerm at the cutoff, on-rent vs not, status 3, short history (< 5 readings). LongTerm with sparse reporting is the README's motivating case: show it explicitly.
+- Interval coverage of the 80/90% bands per gap bucket.
+
+**P6. Uncertainty bands (needed for B and for the business story)**
+LightGBM quantile heads (alpha 0.1/0.9) on the same samples, then split-conformal correction per gap bucket on inner-val so coverage is exact. Output `(km_lo, km_med, km_hi)`.
+
+**P7. Test-set predictions (the actual deliverable of A)**
+Retrain on *all* labelled vehicles (test vehicles are disjoint), cutoff 2026-07-01, predict every masked test row -> `results/test_predictions.csv` (vehicle, date, km_pred, lo, hi). **Cold start**: ~3.7k masked rows belong to vehicles with no known reading, `build_samples` drops them today. Fallback: segment-level km-by-age (model year, vehicle_level, vehicle_type) or a no-history model on static + calendar features; mark them low-confidence.
+
+Skip today (and say so deliberately in the pitch): deep sequence models (TFT, N-BEATS, LSTM), per-vehicle ARIMA. With ~100 noisy irregular readings per vehicle and the signal sitting at fleet level, a GBM on good aggregate features is the right tool.
+
+## 11. Anomaly detection (B), concrete implementation
+
+`src/anomalies.py` (to write):
+1. **Rules** (each with a reason string and severity): R1 decrease vs previous clean reading > 100 km; R2 implied km/day > cap (p99.9 of clean interval rates per rental product); R3 km > 1.1 x vhcl_max_mileage or >= 900k; R4 zero / near-zero after a non-zero history (reset); R5 stuck: identical km over a long on-rent period (> 30 d); R6 same-day conflicting km beyond tolerance.
+2. **Residual score**: engine prediction from history strictly before r (as-of = previous reading), `z = (km_r - q50) / ((q90 - q10) / 2.56)`. Two-sided score: deviation from the interpolation between the clean previous and next readings, scaled by the gap. Score = max(rule severity, |z_forward|, |z_two_sided|); the dominant term becomes the reason.
+3. **Tiers**: *certain* (rule hit), *likely* (|z| above the threshold giving precision >= 0.8 on injections), *watch* (moderate z, or forward-only evidence because there is no next reading yet = the real-time case).
+4. **Evaluation by synthetic injection** on held-out vehicles (1-2% of reports): rollback, dropped digit (12345 -> 1234), extra digit / x10, swapped adjacent digits, +/- 2-20k km offset, stuck odometer (repeat previous value), miles<->km mix-up (x1.609, /1.609; plausible for a US fleet). Precision / recall / PR-AUC per type for rules-only, residual-only, combined. State clearly: injected = upper bound for real performance.
+5. **Real-data plausibility**: top-20 real flags with a small plot each (history, band, flagged point, reason). This is the "how plausible are the flags" criterion; pick examples that explain themselves.
+
+## 12. "Creative" next steps (pitch material: each is cheap once the engine exists)
+
+Ranked by business value x feasibility. #1-#3 are doable today in < 45 min each; the rest are roadmap slides.
+
+1. **Typo auto-correction, not just a flag.** For a flagged report, test whether a simple edit explains it: drop/insert a digit, swap adjacent digits, x1.609 / /1.609. If the edited value lands inside the expected band: "probably a typo, suggested value 41,532 (band 40,900-42,300)". Turns a review queue into a one-click fix. Measurable on injected typos (correction accuracy).
+2. **Max-mileage crossing date.** Engine + band => *when* each car hits `vhcl_max_mileage` (date + interval). "These N cars will exceed their max mileage before their planned defleet" is a direct defleet-planning tool. Validate by backtest on cars that crossed after the cutoff.
+3. **Value-of-information reporting policy.** The band width says *which* long-term cars we are uncertain about. Ask for an odometer photo/reading only when the band (or the implied valuation error in €) is wide, instead of chasing every monthly-reporting customer. Simulate: "revealing the true reading for the 10% most uncertain cars removes X% of total fleet error".
+4. **Fleet-level aggregation.** Sum predictions per pool/region: errors partly cancel, so fleet-level km nowcast error is far smaller than per-car error; relevant for finance/valuation.
+5. **Rental-level (customer) view.** Long-term rentals whose reported km/day sits far below the segment and the vehicle's other rentals (possible under-reporting before return).
+6. **Human-in-the-loop labels.** Reviewer decisions (confirmed error / fine) become labels -> supervised flag model, re-tuned thresholds; the system improves monthly.
+7. **Telematics / OEM odometer feeds** as ground truth where available; the model covers the rest of the fleet.
+
+## 13. Remaining time-box for today
+1. P1 + bias calibration + 3-cutoff backtest -> new headline table.
+2. P2 group-level and shrunk rates (biggest expected gain) -> ablation table.
+3. P6 bands + `anomalies.py` (rules, residual z, injection PR table) -> B results.
+4. P7 test predictions + cold-start fallback.
+5. Creative #1 (typo correction) and #2 (max-mileage date) if time remains; #3 as a slide.
+6. SUBMISSION.md, slides, `run_all.py`, fresh-clone run.
