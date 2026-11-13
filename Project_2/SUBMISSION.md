@@ -50,7 +50,10 @@ Same catch rate with 5x fewer alarms. Suggested corrections are right for 97-98%
 **Limits:** the remaining error is future rental activity (a linear model is only 5% behind; ensembles add 0.3%); stuck odometers cannot be detected from mileage alone; planted errors are an optimistic proxy; test predictions are unscored.
 
 ## How to run
-Python 3.11+, from a fresh clone (data already in `Project_2/data/`), no environment variables:
+**Data is not included in this repo.** The organisers' `data/` folder was removed for confidentiality (it contained a credential that does not belong in a public repo). Place the two files provided by the organisers into `Project_2/data/` (git-ignored) before running:
+`Project_2/data/data_30_percent_sample.parquet` and `Project_2/data/test_data.parquet`.
+
+Python 3.11+, no environment variables:
 ```bash
 cd Project_2
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate

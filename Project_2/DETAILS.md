@@ -117,7 +117,10 @@ Results (alarm budget = share of non-injected readings flagged; precision is a l
 - Stuck odometers are not detectable from mileage reports alone; long blocks of wrong readings (6+ in a row) can still confuse the two-sided score (rare, visible in the examples).
 
 ## How to run
-Python 3.11+. From a fresh clone (the two parquet files are already in `Project_2/data/`):
+**Data is not included in this repo.** The organisers' `data/` folder was removed for confidentiality (it contained a credential that does not belong in a public repo). Place the two files provided by the organisers into `Project_2/data/` (git-ignored) before running:
+`Project_2/data/data_30_percent_sample.parquet` and `Project_2/data/test_data.parquet`.
+
+Python 3.11+:
 ```bash
 cd Project_2
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate
