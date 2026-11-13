@@ -8,6 +8,11 @@ vehicle counts once. Rows `targets=all` include flagged readings (as the hidden 
 | file | setup | LightGBM MAE / bias |
 |---|---|---|
 | `forecast_val_tuned.csv` | **headline**: as fix1 + tuned params (`--params results/hpo/hpo_best.json`) | 1,416 / -196 |
+| `forecast_val_tuned_c2407.csv`, `forecast_val_tuned_c2501.csv` | robustness: tuned model at cutoffs 2024-07-01 and 2025-01-01 | 1,560 / 1,379 |
+| `forecast_seg_tuned.csv` | MAE by segment (rental product, on rent, fleet status, history length, last-reading age) | |
+| `bands_tuned.csv` | 80% prediction bands: coverage raw / conformal, width, per horizon | coverage 0.82 |
+| `coldstart_val.csv` | `src.eval_coldstart`: cold-start model vs new-car baselines | 2,465 vs 2,763 |
+| `plots/forecast_by_horizon.png`, `plots/anomaly_vs_starter.png` | slide charts (`src.make_charts`) | |
 | `forecast_val_fix1.csv` | target-count weighting, no return-date features, base features, default params | 1,427 / -194 |
 | `forecast_val_nocap.csv` | all targets per vehicle, still with return-date features | 1,431 / -271 |
 | `forecast_val_nocap_noret.csv` | all targets, return-date features dropped (dropping them costs nothing) | 1,429 / -268 |

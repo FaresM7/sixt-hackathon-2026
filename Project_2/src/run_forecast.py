@@ -84,6 +84,7 @@ def main() -> None:
     ap.add_argument("--step", type=int, default=30, help="days between training cutoffs")
     ap.add_argument("--tag", default="", help="suffix for the results file")
     ap.add_argument("--params", default="", help="JSON from src.hpo (uses its final_params)")
+    ap.add_argument("--bands", action="store_true", help="also fit q10/q90 models -> 80%% bands")
     args = ap.parse_args()
     feats = FEATURES + (NEW_NUM if args.with_new else []) + (LEAKY if args.with_leaky else [])
     feats = [f for f in feats if f not in args.drop.split(",")]
@@ -173,6 +174,67 @@ def main() -> None:
     print(out.xs("all", level="gap_days").round(3).to_string())
     imp = pd.Series(mdl.booster_.feature_importance("gain"), index=feats).sort_values(ascending=False)
     print("\nTop features (gain):\n", (imp / imp.sum()).round(3).head(15).to_string())
+
+    # ---- error by segment (state at the last known reading): long-term vs short-term etc.
+    seg_out = segment_table(val, ["b1_cum_rate", "b2_segment", "m_lgbm"])
+    print(f"\n=== MAE by segment ===\n{seg_out.round(0).to_string()}")
+    seg_out.to_csv(HERE / "results" / f"forecast_seg{args.tag}.csv")
+
+    # ---- uncertainty bands: quantile LightGBMs (q10/q90 of the rate; quantile loss x gap = loss
+    # in km), then split-conformal correction on the full-horizon inner slice => 80% bands
+    if args.bands:
+        cal = inner[(inner.cutoff >= c_val - 365) & (inner.cutoff <= c_val - 150)]
+        lo_hi = {}
+        for name, a in [("lo", 0.1), ("hi", 0.9)]:
+            q = lgb.LGBMRegressor(**{**params, "objective": "quantile", "alpha": a},
+                                  n_estimators=mdl.best_iteration_, n_jobs=16, verbose=-1,
+                                  random_state=args.seed)
+            q.fit(tr[feats], tr.y_rate, sample_weight=tr.gap * tr.w_tgt)
+            lo_hi[name] = q
+        band = lambda d: (d.km0 + np.clip(lo_hi["lo"].predict(d[feats]), 0, cap) * d.gap,
+                          d.km0 + np.clip(lo_hi["hi"].predict(d[feats]), 0, cap) * d.gap)
+        c_lo, c_hi = band(cal)
+        c_true = cal.km0 + cal.y_rate * cal.gap
+        # conformal: per gap bucket, widen/shrink both sides by the 80% quantile of the violation
+        b_cal = np.digitize(cal.gap, edges, right=True)
+        viol = np.maximum(c_lo - c_true, c_true - c_hi).to_numpy()
+        adj = np.array([np.quantile(viol[b_cal == b], 0.8) if (b_cal == b).sum() > 50 else 0.0
+                        for b in range(len(BUCKETS))])
+        v_lo, v_hi = band(val)
+        val["lo_raw"], val["hi_raw"] = v_lo, v_hi
+        val["lo"], val["hi"] = v_lo - adj[b_val], v_hi + adj[b_val]
+        rows = []
+        for name, lo_, hi_ in [("all", 1, 10_000)] + [(f"{a}-{b}", a, b) for a, b in BUCKETS]:
+            s = val[(val.gap >= lo_) & (val.gap <= hi_)]
+            rows.append({"gap_days": name, "n": len(s),
+                         "coverage_raw": ((s.km_t >= s.lo_raw) & (s.km_t <= s.hi_raw)).mean(),
+                         "coverage_conformal": ((s.km_t >= s.lo) & (s.km_t <= s.hi)).mean(),
+                         "median_width_km": (s.hi - s.lo).median(),
+                         "median_true_km_driven": (s.km_t - s.km0).median()})
+        bt = pd.DataFrame(rows).set_index("gap_days")
+        print(f"\n=== 80% prediction bands (target coverage 0.80) ===\n{bt.round(3).to_string()}")
+        bt.to_csv(HERE / "results" / f"bands{args.tag}.csv")
+
+
+def segment_table(val: pd.DataFrame, models: list[str]) -> pd.DataFrame:
+    """MAE per segment of the state at the last known reading."""
+    v = val.copy()
+    v["rental_at_last_reading"] = v.rental_product.astype(str).replace({"nan": "none"})
+    v["on_rent_at_last_reading"] = v.on_rent_status.astype(str)
+    v["fleet_status"] = v.status_code_anonymized.map({1: "1 new", 2: "2 active", 3: "3 defleet",
+                                                      4: "4 sold"}).fillna("other")
+    v["history_length"] = pd.cut(v.hist_days, [-1, 90, 365, 10_000], labels=["<90 d", "90-365 d", ">365 d"]).astype(str)
+    v["last_reading_age"] = pd.cut(v.stale, [-1, 7, 28, 10_000], labels=["<=7 d", "8-28 d", ">28 d"]).astype(str)
+    rows = []
+    for seg in ["rental_at_last_reading", "on_rent_at_last_reading", "fleet_status", "history_length",
+                "last_reading_age"]:
+        for val_, s in v.groupby(seg):
+            r = {"segment": seg, "value": val_, "n": len(s), "vehicles": s[KEY].nunique()}
+            for m in models:
+                r[f"MAE_{m}"] = (s[m] - s.km_t).abs().mean()
+            r["gain_vs_segment_baseline"] = 1 - r["MAE_m_lgbm"] / r["MAE_b2_segment"]
+            rows.append(r)
+    return pd.DataFrame(rows).set_index(["segment", "value"])
 
 
 if __name__ == "__main__":

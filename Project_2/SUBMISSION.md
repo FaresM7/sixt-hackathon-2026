@@ -1,9 +1,9 @@
-# Submission: Project 2, <The golden butterfly>
+# Submission: Project 2, The golden butterfly
 
-> DRAFT (13 Nov, 14:05). TODO: multi-cutoff robustness, slides.
+> Status 13 Nov, 14:45. TODO: slides.
 
 ## Authors
-**Team name:** <The golden butterfly>
+**Team name:** The golden butterfly
 
 **Project:** Project 2: Mileage Forecasting & Erroneous Mileage Detection
 
@@ -18,7 +18,7 @@ A gradient-boosted model (LightGBM) learns the km/day from what is known at the 
 
 **Data cleaning:** one reading per car-day (the max); a reading is flagged as an outlier if it breaks monotonicity against the median of its 3 previous / 3 next readings by > 100 km, or is absurd (>= 900k km, > 3x max mileage); 1% of readings are flagged. The clean series is forced monotone. Training targets use clean readings only; we report validation both with and without flagged targets.
 
-**Assumptions:** `rntl_return_date` is the *actual* return date, so for a rental still open at the cutoff it is future information; we do not use it. We use nothing from the masked test rows (not even their dates) as input.
+**Data rules (confirmed with the project owner):** `rntl_return_date` is the *actual* return date, so for a rental still open at the cutoff it is future information; we do not use it as a feature. The test file is for testing only: nothing from it is used for training, and nothing from its masked rows (not even their dates) is used as input. The test file's known history (up to 2026-07-01) is only used as the starting point of its own predictions.
 
 ### Key findings that shaped the model
 1. **A car's own past usage is a weak predictor**: the segment average rate (1,680 km MAE) beats the car's own average rate (2,200). Rental cars change customers; the signal is mostly at fleet, segment and location level. The branch pool code carries ~40% of the model's gain.
@@ -35,7 +35,7 @@ Same held-out data for all (20% of vehicles never seen in training, cutoff 2025-
 | **LightGBM (L1 on rate, weight = gap)** | open | local CPU | **1,426 (1,438)** | 37 s | **yes**: best, fast, native categoricals |
 | LightGBM, 4-seed average | open | local CPU | 1,423 | 69 s | no, +0.2% not worth it |
 | Blend Ridge/HistGB/LightGBM (weights fitted on inner slice) | open | local CPU | 1,422 | - | no, +0.3% not worth the complexity |
-| Cold-start LightGBM (static attributes + calendar only) | open | local CPU | not validated | - | yes, only for 149 cars (2.3% of test rows) without any history |
+| Cold-start LightGBM (static attributes + calendar only) | open | local CPU | 2,465 on 416 held-out new cars (baseline: median km of new cars at that horizon 2,763) | - | yes, only for 149 cars (2.3% of test rows) without any history |
 
 No LLM or API is used; prediction for all 163k test rows takes seconds on a laptop.
 
@@ -58,7 +58,24 @@ By days since the last known reading (MAE km, tuned model vs segment baseline vs
 
 We report WAPE (sum |error| / sum |true km driven since last reading|) instead of MAPE on the odometer: MAPE on the absolute odometer is tiny and flattering, MAPE on the driven distance explodes for parked cars.
 
-Robustness: TODO, mean ± spread over 3 cutoffs (2024-07-01, two 2025 cutoffs). Earlier runs: the cutoff 2024-07-01 is harder (MAE 1,591) than 2025 (1,386-1,427).
+**Robustness: three validation cutoffs** (each: different held-out period, same 20% held-out vehicles, tuned model):
+
+| Cutoff (window) | LightGBM | Segment baseline | Starter-style | Gain vs segment / starter | Bias (ours) |
+| --- | --- | --- | --- | --- | --- |
+| 2024-07-01 (to 11-11) | 1,560 | 1,837 | 2,425 | -15% / -36% | -453 |
+| 2025-01-01 (to 05-14) | 1,379 | 1,564 | 1,838 | -12% / -25% | +1 |
+| 2025-07-01 (to 11-11), headline | 1,416 | 1,680 | 2,200 | -16% / -36% | -196 |
+| **Mean** | **1,452** | 1,694 | 2,154 | **-14% / -33%** | |
+
+The gain holds in every period and season. The bias varies with the period (-453 to +1 km): it follows year-to-year changes in fleet usage that no feature captures.
+
+**By segment** (headline cutoff, state at the last known reading; MAE km, ours vs segment baseline):
+- Long-term rental: 2,052 vs 2,278 (-10%); short-term: 1,336 vs 1,606 (-17%). Long-term cars are harder (they report rarely and drive more), but we still beat the baseline.
+- Last reading older than 28 days (the "monthly reporting" case): 1,722 vs 3,291 (**-48%**, 609 readings). Defleet cars (status 3): 1,024 vs 2,144 (-52%, small sample: 120 readings): the model learns that they stop driving.
+- Short history (< 90 days): 1,417 vs 1,752 (-19%; the car's own rate alone: 3,038).
+
+**Uncertainty: 80% prediction bands.** Quantile LightGBMs (10th/90th percentile of the rate) plus a split-conformal correction fitted on the inner slice. Measured coverage on the held-out vehicles: **82%** overall (80-84% in every horizon bucket; 77% before the correction). Median band width: 1,190 km at 1-14 days, 6,770 km at 91-150 days. Every forecast can therefore be shipped with a range, e.g. "23,400 km, 80% sure between 21,300 and 25,900".
+
 
 **Test predictions**: all 163,047 masked test rows predicted (`results/test_predictions.csv`), median implied usage 79 km/day (IQR 70-87). No ground truth is available to us, so these are unscored.
 
@@ -90,30 +107,40 @@ Results (alarm budget = share of non-injected readings flagged; precision is a l
 - More features (pool/region/fleet recent rates, shrunk car rate, on-rent shares) gave no gain at 3 cutoffs.
 - Ensembles and denser training cutoffs: within noise.
 - Remaining bias -194 km: partly expected (L1 predicts the median of a right-skewed rate), partly the target-count effect.
-- Cold-start model not validated; test predictions unscored; no anomaly labels exist, so detection can only be evaluated with injected errors and plausibility review. Injected errors are an optimistic proxy for real ones.
+- Cold-start model: -11% MAE vs its baseline and almost no bias, but the error is large relative to the ~3,400 km such cars have driven (we don't know when a new car enters the fleet). Test predictions unscored; no anomaly labels exist, so detection can only be evaluated with injected errors and plausibility review. Injected errors are an optimistic proxy for real ones.
 - Stuck odometers are not detectable from mileage reports alone; long blocks of wrong readings (6+ in a row) can still confuse the two-sided score (rare, visible in the examples).
 
 ## How to run
-Python 3.11+. From a fresh clone:
+Python 3.11+. From a fresh clone (the two parquet files are already in `Project_2/data/`):
 ```bash
 cd Project_2
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-# put data_30_percent_sample.parquet and test_data.parquet into Project_2/data/ (git-ignored)
-python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --tag _tuned   # headline table -> results/forecast_val_tuned.csv (~10 min)
-python -m src.compare_models --frac 0.5              # model comparison -> results/model_comparison.csv (~5 min)
-python -m src.hpo --minutes 60 --tag hpo             # optional, hyper-parameter search -> results/hpo/
-python -m src.train_final --params results/hpo/hpo_best.json   # final tuned model + test predictions -> results/test_predictions.csv (~12 min)
-python -m src.anomalies                              # task B: injection evaluation, real flags, plots (~2 min)
 ```
-Seeds are fixed (seed 0, same vehicle split in every script). No environment variables or secrets needed. `results/README.md` lists every result file.
+
+**Main pipeline (2 commands, ~15 min)**, uses the committed tuned parameters, no search needed:
+```bash
+python -m src.train_final --params results/hpo/hpo_best.json   # task A: final model + predictions for all masked test rows -> results/test_predictions.csv (~12 min)
+python -m src.anomalies                                         # task B: flags on the real data + injection evaluation + plots (~2 min)
+```
+
+**Reproduce the evaluation tables in this document (optional).** All result files are already committed in `results/` (index: `results/README.md`); these commands regenerate them:
+```bash
+python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --bands --tag _tuned   # headline + per-horizon + per-segment tables, 80% bands (~20 min)
+python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --cutoff 2024-07-01 --val_end 2024-11-11 --tag _tuned_c2407   # robustness, 2nd cutoff (~10 min)
+python -m src.run_forecast --frac 1.0 --params results/hpo/hpo_best.json --cutoff 2025-01-01 --val_end 2025-05-14 --tag _tuned_c2501   # robustness, 3rd cutoff (~10 min)
+python -m src.compare_models --frac 0.5     # model-family comparison and ensembles (~5 min)
+python -m src.eval_coldstart                # cold-start model validation (~1 min)
+python -m src.hpo --minutes 60 --tag hpo    # hyper-parameter search; rewrites results/hpo/hpo_best.json (~75 min)
+```
+Seeds are fixed (seed 0, same vehicle split in every script). No environment variables or secrets needed.
 
 ## Demo
 TODO: `submission/slides.pdf` (max 5 slides).
 
 ## Next steps
-1. **Review queue with feedback**: flags + reason + suggested fix go to a human; their decisions become labels to train a supervised detector and tune thresholds.
-2. **Uncertainty bands** (quantile models + conformal calibration) per car and date.
-3. **Max-mileage crossing date**: predict when each car hits `vhcl_max_mileage`, for defleet planning.
-4. **Ask for readings where it matters**: request an odometer reading only from the long-term customers whose cars are most uncertain.
-5. **Use SIXT's booking calendar** (future rentals, planned return dates): our analysis shows future rental activity is the missing information, and SIXT already has it.
+1. **Use SIXT's booking calendar** (future rentals, planned return dates, contract ends): our analysis shows that future rental activity is the missing information, and SIXT already has it.
+2. **Review queue with feedback**: flags + reason + suggested fix go to a human; their decisions become labels to train a supervised detector and tune thresholds.
+3. **Ask for readings where it matters**: use the band width to request an odometer reading only from the long-term customers whose cars are most uncertain.
+4. **Score every incoming report in real time** with the forecast model (the forward score), as a nightly or streaming job.
+5. **Max-mileage crossing date**: predict when each car hits `vhcl_max_mileage` (with its band), for defleet planning.
